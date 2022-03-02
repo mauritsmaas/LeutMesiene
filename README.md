@@ -8,9 +8,9 @@ The LeutMesiene is developed in Python, further important libraries will be iden
 
 #### Author
 
-**Maurits Maas**
-Offensive Security Certified Professional (OSCP) 
-Student Master Security and Network Engineering (OS3) 
+**Maurits Maas** <br>
+Offensive Security Certified Professional (OSCP) <br>
+Student Master Security and Network Engineering (OS3) <br>
 https://www.linkedin.com/in/maurits-maas/ 
 
 ##### Name
