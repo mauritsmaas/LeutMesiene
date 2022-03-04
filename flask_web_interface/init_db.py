@@ -3,7 +3,7 @@ import sqlite3
 
 connection = sqlite3.connect('database.db')
 
-## TODO: cant open it 
+## TODO: cant open it continu here
 with open('dbstructure.sql') as f:
     connection.executescript(f.read())
 
