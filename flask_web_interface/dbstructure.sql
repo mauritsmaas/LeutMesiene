@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS types;
 DROP TABLE IF EXISTS attack_oses;
 DROP TABLE IF EXISTS phases;
 DROP TABLE IF EXISTS items;
-DROP TABLE IF EXISTS item_assignees;
+DROP TABLE IF EXISTS item_types;
+DROP TABLE IF EXISTS item_attackos;
 
 CREATE TABLE types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,28 +20,31 @@ CREATE TABLE phases (
     phase TEXT NOT NULL
 );
 
-
 CREATE TABLE items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    FOREIGN KEY (type_id) REFERENCES type (id),
+    type_id INTEGER NOT NULL
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     usage TEXT,
     source TEXT NOT NULL,
     cve TEXT,
-    FOREIGN KEY (os_id) REFERENCES attack_oses (id),
+    phase_id INTEGER NOT NULL,
+    FOREIGN KEY (type_id) REFERENCES type (id),
     FOREIGN KEY (phase_id) REFERENCES phases (id)
 );
 
-CREATE TABLE assignees (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
-);
-
-CREATE TABLE item_assignees (
+CREATE TABLE item_types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_id INTEGER,
-    assignee_id INTEGER,
+    type_id INTEGER,
     FOREIGN KEY(item_id) REFERENCES items(id),
-    FOREIGN KEY(assignee_id) REFERENCES assignees(id)
+    FOREIGN KEY(type_id) REFERENCES types(id)
+);
+
+CREATE TABLE item_attackos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id INTEGER,
+    attackos_id INTEGER,
+    FOREIGN KEY(item_id) REFERENCES items(id),
+    FOREIGN KEY(attackos_id) REFERENCES attack_oses(id)
 );

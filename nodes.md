@@ -10,7 +10,7 @@ Description
 Usage
 Source/site
 CVE
-Attack OS (Linux, MacOS, Windows, All, Other)
+Attack OS (Linux, MacOS, Windows, Other)
 Phase (reconnaissance, scanning, initial foothold, priviledge escalation, maintaining access,covering)
 
 
@@ -24,3 +24,7 @@ https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask
 
 Database many-to-many relationship:
 https://www.digitalocean.com/community/tutorials/how-to-use-many-to-many-database-relationships-with-flask-and-sqlite
+
+### Functionalities
+- Import all the items
+- Update local db-file if needed at end of session
