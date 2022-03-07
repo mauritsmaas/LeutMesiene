@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 import sqlite3
+import sys
 
 connection = sqlite3.connect('database.db')
 
-## TODO: cant open it continu here
-with open('dbstructure.sql') as f:
-    connection.executescript(f.read())
-
+sql_file = open(sys.path[0] + '/dbstructure.sql')
+sql_as_string = sql_file.read()
 cur = connection.cursor()
+cur.executescript(sql_as_string)
+
 
 ## Fill the types in DB
-cur.execute("INSERT INTO types (name) VALUES (?)", ('command',))
-cur.execute("INSERT INTO types (name) VALUES (?)", ('tool',))
+cur.execute("INSERT INTO types(name) VALUES (?)", ('command',))
+cur.execute("INSERT INTO types(name) VALUES (?)", ('tool',))
 
 ## Fill the attack oses
 cur.execute("INSERT INTO attack_oses (os) VALUES (?)", ('linux',))
@@ -26,18 +27,16 @@ cur.execute("INSERT INTO phases (phase) VALUES (?)", ('initial foothold',))
 cur.execute("INSERT INTO phases (phase) VALUES (?)", ('privesc',))
 cur.execute("INSERT INTO phases (phase) VALUES (?)", ('maintain access',))
 cur.execute("INSERT INTO phases (phase) VALUES (?)", ('covering',))
+cur.execute("INSERT INTO phases (phase) VALUES (?)", ('general',))
 
 ## Select the tables
 cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
 #cur.execute("SELECT * FROM atack_oses")
 #cur.execute("SELECT * FROM phases")
 
-for tablerow in cur.fetchall():
-        table = tablerow[0]
-        cur.execute("SELECT * FROM {t}".format(t = table))
-        for row in cur:
-            for field in row.keys():
-                print(table, field, row[field])
+res = cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+for name in res.fetchall():
+    print(name[0])
 
 connection.commit()
 connection.close()

@@ -9,28 +9,28 @@ DROP TABLE IF EXISTS item_attackos;
 
 CREATE TABLE types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    name TEXT
 );
 
 CREATE TABLE attack_oses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    os TEXT NOT NULL
+    os TEXT 
 );
 
 CREATE TABLE phases (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    phase TEXT NOT NULL
+    phase TEXT 
 );
 
 CREATE TABLE items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    type_id INTEGER NOT NULL
-    name TEXT NOT NULL,
-    description TEXT NOT NULL,
+    type_id INTEGER,
+    name TEXT,
+    description TEXT ,
     usage TEXT,
-    source TEXT NOT NULL,
+    source TEXT,
     cve TEXT,
-    phase_id INTEGER NOT NULL,
+    phase_id INTEGER ,
     FOREIGN KEY (type_id) REFERENCES type (id),
     FOREIGN KEY (phase_id) REFERENCES phases (id)
 );
