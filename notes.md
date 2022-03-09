@@ -26,5 +26,5 @@ Database many-to-many relationship:
 https://www.digitalocean.com/community/tutorials/how-to-use-many-to-many-database-relationships-with-flask-and-sqlite
 
 ### Functionalities
-- Import all the items
+- Import all the items, set in list
 - Update local db-file if needed at end of session

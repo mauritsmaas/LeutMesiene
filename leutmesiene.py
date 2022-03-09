@@ -1,10 +1,40 @@
 #!/usr/bin/env python3
 
+from asyncio.windows_events import NULL
+from cmath import phase
+from inspect import CO_VARARGS
 import os
+from re import I
 import time
 from pyfiglet import Figlet
 from clint.textui import colored
 from flask_web_interface.app import startflask
+import sqlite3
+
+class Item(object):
+    id = NULL
+    name = ""
+    type = ""
+    description = ""
+    usage = ""
+    source = ""
+    cve = ""
+    attackos = []
+    phase = ""
+
+    def __init__(self, id, name, type, description, usage, source, cve, phase, attackos):
+        self.id = id
+        self.name = name
+        self.type = type
+        self.description = description
+        self.usage = usage
+        self.source = source
+        self.cve = cve
+        self.attackos = attackos
+        self.phase = phase
+    
+    def set_attackos(self, attackos):
+        self.attackos.append(attackos)
 
 def welcome(text):
     result = Figlet()
@@ -36,6 +66,37 @@ def main():
             exit()
         os.system("clear")
 
+def getdbinfo():
+    try:
+        #Make connection with db file
+        conn = sqlite3.connect('database.db')
+
+        #Query to get all the items in db
+        query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase \
+            FROM items i \
+                INNER JOIN types t ON i.type_id = t.id \
+                INNER JOIN phases p ON i.phase_id = p.id '
+
+        res = conn.execute(query)
+        items = []
+        for item in res.fetchall():
+            #Query to get all attack oses by corresponsing item
+            a_res = conn.execute('SELECT a.os FROM attack_oses a \
+                                    JOIN item_attackos ia \
+                                    ON a.id = ia.attackos_id \
+                                    WHERE ia.item_id = ?',
+                                    (item[0],)).fetchall()
+            attackoses = []
+            for aos in a_res:
+                attackoses.extend(aos)
+            
+            #Put all the data in object and list
+            i = Item(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7], attackoses)
+            items.append(i)
+        return items
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
-    main()
+    getdbinfo()
+    #main()

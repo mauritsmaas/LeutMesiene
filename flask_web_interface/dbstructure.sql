@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS item_types;
 DROP TABLE IF EXISTS item_attackos;
 
 
-
 CREATE TABLE types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT
@@ -24,17 +23,18 @@ CREATE TABLE phases (
 
 CREATE TABLE items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    type_id INTEGER,
     name TEXT,
+    type_id INTEGER,
     description TEXT ,
     usage TEXT,
     source TEXT,
     cve TEXT,
     phase_id INTEGER ,
-    FOREIGN KEY (type_id) REFERENCES type (id),
+    FOREIGN KEY (type_id) REFERENCES types (id),
     FOREIGN KEY (phase_id) REFERENCES phases (id)
 );
 
+/*
 CREATE TABLE item_types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_id INTEGER,
@@ -42,7 +42,7 @@ CREATE TABLE item_types (
     FOREIGN KEY(item_id) REFERENCES items(id),
     FOREIGN KEY(type_id) REFERENCES types(id)
 );
-
+*/
 CREATE TABLE item_attackos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_id INTEGER,
@@ -50,3 +50,21 @@ CREATE TABLE item_attackos (
     FOREIGN KEY(item_id) REFERENCES items(id),
     FOREIGN KEY(attackos_id) REFERENCES attack_oses(id)
 );
+
+/*
+(1, 'command')
+(2, 'tool')
+
+(1, 'linux')
+(2, 'windows')
+(3, 'mac')
+(4, 'other')
+
+(1, 'recon')
+(2, 'scanning')
+(3, 'initial foothold')
+(4, 'privesc')
+(5, 'maintain access')
+(6, 'covering')
+(7, 'general')
+*/
