@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 
-from asyncio.windows_events import NULL
-from cmath import phase
-from inspect import CO_VARARGS
 import os
-from re import I
+import sys
 import time
 from pyfiglet import Figlet
 from clint.textui import colored
-from flask_web_interface.app import startflask
 import sqlite3
 
+p = os.path.abspath('.')
+sys.path.insert(1, p)
+from flask_web_interface.app import *
+
 class Item(object):
-    id = NULL
+    id = 0
     name = ""
     type = ""
     description = ""
@@ -98,5 +98,5 @@ def getdbinfo():
         print(e)
 
 if __name__ == "__main__":
-    getdbinfo()
-    #main()
+    #getdbinfo()
+    main()

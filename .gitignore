@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # own files
-nodes.md
+#notes.md
+#dbstructure.sql
