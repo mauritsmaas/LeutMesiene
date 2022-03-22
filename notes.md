@@ -28,3 +28,4 @@ https://www.digitalocean.com/community/tutorials/how-to-use-many-to-many-databas
 ### Functionalities
 - item list on flask site
 - Update local db-file if needed at end of session
+- No result check ippsec
