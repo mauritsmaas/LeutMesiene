@@ -25,6 +25,9 @@ https://blog.miguelgrinberg.com/post/beautiful-interactive-tables-for-your-flask
 Database many-to-many relationship:
 https://www.digitalocean.com/community/tutorials/how-to-use-many-to-many-database-relationships-with-flask-and-sqlite
 
+Tutorial with vue.js and flask:
+https://codeburst.io/full-stack-single-page-application-with-vue-js-and-flask-b1e036315532
+
 ### Functionalities
 - item list on flask site
 - Update local db-file if needed at end of session
