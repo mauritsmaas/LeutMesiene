@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from json import JSONEncoder
 import os
 import sys
 import time
@@ -37,6 +38,9 @@ class Item(object):
     def set_attackos(self, attackos):
         self.attackos.append(attackos)
 
+    def encode(self):
+        return self.__dict__
+
 def welcome(text):
     result = Figlet()
     return colored.green(result.renderText(text))
@@ -56,6 +60,8 @@ def main():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print("This is not implemented jet\n")
+            i = getdbinfo()
+            print(i)
             time.sleep(5)
         elif c == '2':
             os.system("clear")
@@ -68,13 +74,12 @@ def main():
         os.system("clear")
 
 def getdbinfo():
-    try:
+    # try:
         #Make connection with db file
-        conn = sqlite3.connect('database.db')
-
+        conn = sqlite3.connect(sys.path[0] + '/database.db')
+        
         #Query to get all the items in db
-        query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase \
-            FROM items i \
+        query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
                 INNER JOIN types t ON i.type_id = t.id \
                 INNER JOIN phases p ON i.phase_id = p.id '
 
@@ -95,8 +100,8 @@ def getdbinfo():
             i = Item(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7], attackoses)
             items.append(i)
         return items
-    except Exception as e:
-        print(e)
+    # except Exception as e:
+    #     print(e)
 
 if __name__ == "__main__":
     main()

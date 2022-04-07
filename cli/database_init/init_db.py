@@ -2,7 +2,7 @@
 import sqlite3
 import sys
 
-connection = sqlite3.connect('database.db')
+connection = sqlite3.connect(sys.path[0] + '/../database.db')
 
 sql_file = open(sys.path[0] + '/dbstructure.sql')
 sql_as_string = sql_file.read()

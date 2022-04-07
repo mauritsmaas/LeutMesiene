@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import os
 import sys
-from flask import Flask, render_template
+import json
+from flask import Flask, render_template, jsonify
 
 p = os.path.abspath('../')
 sys.path.insert(1, p)
@@ -21,11 +22,13 @@ def catch_all(path):
 def index():
     return render_template("index.html")
 
-# @app.route("/test")
-# def indextest():
-#     items = getdbinfo()
-#     return render_template('basic_table.html', title='Basic Table',
-#                            items=items)
+@app.route('/api/items', methods=['GET'])
+def all_items():
+    items = getdbinfo()
+    print(json.dumps(items, default=lambda o: o.encode()))
+    return jsonify({
+        'items': json.dumps(items, default=lambda o: o.encode())
+    })
 
 def startflask():
     app.run()

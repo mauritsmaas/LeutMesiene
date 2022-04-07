@@ -3,4 +3,4 @@ clint
 sqlite3
 flask
 
-##vue-cli, vuetify with npm
+##vue-cli, vuetify, axios with npm

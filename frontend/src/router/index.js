@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import NotFound from '../views/NotFound.vue'
 import HelloWorld from '../components/HelloWorld'
+import Items from '../views/items'
 
 // const routerOptions = [
 //   { path: '/', component: 'Home' },
@@ -40,10 +41,14 @@ export default new Router({
      component: About
     },
     {
+      path: '/items',
+     name: 'items',
+     component: Items
+    },
+    {
       path: '*',
      name: 'notfound',
      component: NotFound
-    },
-
+    }
   ]
 })
