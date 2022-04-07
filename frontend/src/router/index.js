@@ -20,21 +20,27 @@ import HelloWorld from '../components/HelloWorld'
 
 Vue.use(Router)
 
+ /* eslint-disable */ 
+
 export default new Router({
   routes: [
-    {path: '/',
+    {
+      path: '/',
      name: 'home',
      component: Home
     },
-    {path: '/HelloWorld',
+    {
+      path: '/hw',
      name: 'helloworld',
      component: HelloWorld
     },
-    {path: '/about',
+    {
+      path: '/about',
      name: 'about',
      component: About
     },
-    {path: '*',
+    {
+      path: '*',
      name: 'notfound',
      component: NotFound
     },

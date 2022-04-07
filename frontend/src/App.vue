@@ -1,9 +1,26 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+  <v-app>
+    <v-toolbar max-height=5% app dark class="blue accent-4">
+      <v-toolbar-title class="headline text-uppercase">
+        <span>LeutMesiene &nbsp;</span>
+        <span class="font-weight-light">Hacker Cheatsheet</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://github.com/mauritsmaas/LeutMesiene"
+      >
+        <span class="mr-2">Latest Release</span>
+      </v-btn>
+    </v-toolbar>
+
+    <v-content>
+      <router-view />
+    </v-content>
+  </v-app>
 </template>
+
+
 
 <script>
 export default {
@@ -12,12 +29,4 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
