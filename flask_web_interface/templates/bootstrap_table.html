@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Usage</th>
+        <th>Source</th>
+        <th>CVE</th>
+        <th>Attack_os(es)</th>
+        <th>Phase</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.type }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.usage }}</td>
+          <td>{{ item.source }}</td>
+          <td>{{ item.cve }}</td>
+          <td>{{ item.attackos }}</td>
+          <td>{{ item.phase }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

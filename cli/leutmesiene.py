@@ -7,7 +7,8 @@ from pyfiglet import Figlet
 from clint.textui import colored
 import sqlite3
 
-p = os.path.abspath('.')
+
+p = os.path.abspath('../')
 sys.path.insert(1, p)
 from flask_web_interface.app import *
 
@@ -98,5 +99,4 @@ def getdbinfo():
         print(e)
 
 if __name__ == "__main__":
-    #getdbinfo()
     main()
