@@ -5,6 +5,7 @@ import About from '../views/About.vue'
 import NotFound from '../views/NotFound.vue'
 import HelloWorld from '../components/HelloWorld'
 import Items from '../views/items'
+import Item from '../views/Item'
 
 // const routerOptions = [
 //   { path: '/', component: 'Home' },
@@ -26,7 +27,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
+     path: '/',
      name: 'home',
      component: Home
     },
@@ -44,6 +45,11 @@ export default new Router({
       path: '/items',
      name: 'items',
      component: Items
+    },
+    {
+      path: "/item/:id",
+      name: "item-details",
+      component: Item
     },
     {
       path: '*',

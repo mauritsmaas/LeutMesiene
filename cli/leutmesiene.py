@@ -114,5 +114,24 @@ def getdbinfo():
     # except Exception as e:
     #     print(e)
 
+def getitembyid(id):
+    # try:
+        #Make connection with db file
+        conn = sqlite3.connect(sys.path[0]+ '/cli/database.db')
+        
+        #Query to get all the items in db
+        query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
+                INNER JOIN types t ON i.type_id = t.id \
+                INNER JOIN phases p ON i.phase_id = p.id \
+                WHERE i.id = ? '
+
+        res = conn.execute(query, id)
+        item = res.fetchall()
+        print(item)
+        return item
+    # except Exception as e:
+    #     print(e)
+
+
 if __name__ == "__main__":
     main()
