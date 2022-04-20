@@ -1,13 +1,12 @@
 <template>
   <v-app>
-    <v-toolbar max-height=5% app dark class="blue accent-4">
+    <v-toolbar max-height=5% dark class="blue accent-4">
       <v-toolbar-title class="headline text-uppercase">
         <span>LeutMesiene &nbsp;</span>
         <span class="font-weight-light">Hacker Cheatsheet</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-        flat
         href="https://github.com/mauritsmaas/LeutMesiene"
       >
         <span class="mr-2">Latest Release</span>

@@ -7,10 +7,12 @@ import time
 from pyfiglet import Figlet
 from clint.textui import colored
 import sqlite3
+import inspect
 
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
 
-p = os.path.abspath('../')
-sys.path.insert(1, p)
 from flask_web_interface.app import *
 
 class Item(object):
@@ -37,9 +39,18 @@ class Item(object):
     
     def set_attackos(self, attackos):
         self.attackos.append(attackos)
-
-    def encode(self):
-        return self.__dict__
+    
+    #to make it Json serializable
+    def to_dict(self):
+        return dict(id=self.id,
+                    name=self.name,
+                    type=self.type,
+                    description=self.description,
+                    usage = self.usage,
+                    source = self.source,
+                    cve = self.cve,
+                    phase = self.phase,
+                    attackos = self.attackos)
 
 def welcome(text):
     result = Figlet()
@@ -47,7 +58,7 @@ def welcome(text):
 
 def main():
    while True:
-        os.system("clear")
+        os.system("cls")
         print(welcome("LeutMesiene"))
         print("The knowledge/cheatsheet of a lazy hacker\n")
         print("Please select an option ")
@@ -57,26 +68,26 @@ def main():
         c = input("\nEnter your choice : ") 
 
         if c == '1':
-            os.system("clear")
+            os.system("cls")
             print(welcome("LeutMesiene"))
             print("This is not implemented jet\n")
             i = getdbinfo()
             print(i)
             time.sleep(5)
         elif c == '2':
-            os.system("clear")
+            os.system("cls")
             print(welcome("LeutMesiene"))
             print('Running flask')
             startflask()
         elif c == '0':
             print("Bye!")
             exit()
-        os.system("clear")
+        os.system("cls")
 
 def getdbinfo():
     # try:
         #Make connection with db file
-        conn = sqlite3.connect(sys.path[0] + '/database.db')
+        conn = sqlite3.connect(sys.path[0]+ '/cli/database.db')
         
         #Query to get all the items in db
         query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \

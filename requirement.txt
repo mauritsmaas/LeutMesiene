@@ -2,5 +2,6 @@ pyfiglet
 clint
 sqlite3
 flask
+flask-cors
 
 ##vue-cli, vuetify, axios with npm

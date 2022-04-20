@@ -20,8 +20,14 @@
       <tr v-for="item in items" :key="item.id">
         <td>{{ item.id }}</td>
         <td>{{ item.type }}</td>
-        <td>{{ item.activity }}</td>
-        <td>{{ item.changes }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.usage }}</td>
+        <td>{{ item.source }}</td>
+        <td>{{ item.cve }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.attackos }}</td>
+        <td>{{ item.phase }}</td>
       </tr>
     </tbody>
   </v-simple-table>
@@ -43,8 +49,9 @@ export default {
       const path = 'http://localhost:5000/api/items';
       axios.get(path, )
         .then((res) => {
-          console.log(res);
+          //console.log(res.data.items);
           this.items = res.data.items;
+          console.log(this.items)
         })
         .catch((error) => {
           console.error(error);

@@ -2,6 +2,8 @@
 import sqlite3
 import sys
 
+print(sys.path[0])
+
 connection = sqlite3.connect(sys.path[0] + '/../database.db')
 
 sql_file = open(sys.path[0] + '/dbstructure.sql')

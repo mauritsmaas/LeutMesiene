@@ -2,15 +2,22 @@
 import os
 import sys
 import json
+import inspect
 from flask import Flask, render_template, jsonify
+from flask_cors import CORS
 
-p = os.path.abspath('../')
-sys.path.insert(1, p)
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir) 
+
 from cli.leutmesiene import *
 
 app = Flask(__name__,
             static_folder = "../frontend/dist/static",
             template_folder = "../frontend/dist")
+
+# Hanles the Cross Origin Resource Sharing, https://flask-cors.readthedocs.io/en/latest/
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 #Catch the different paths and use the vue-router
 @app.route('/', defaults={'path': ''})
@@ -25,9 +32,8 @@ def index():
 @app.route('/api/items', methods=['GET'])
 def all_items():
     items = getdbinfo()
-    print(json.dumps(items, default=lambda o: o.encode()))
     return jsonify({
-        'items': json.dumps(items, default=lambda o: o.encode())
+        'items': [i.to_dict() for i in items]
     })
 
 def startflask():
