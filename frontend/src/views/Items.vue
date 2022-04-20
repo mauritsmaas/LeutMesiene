@@ -25,7 +25,6 @@
         <td>{{ item.usage }}</td>
         <td>{{ item.source }}</td>
         <td>{{ item.cve }}</td>
-        <td>{{ item.type }}</td>
         <td>{{ item.attackos }}</td>
         <td>{{ item.phase }}</td>
       </tr>
