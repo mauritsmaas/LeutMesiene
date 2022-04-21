@@ -1,7 +1,7 @@
 <template>
-<v-container class="pa-2" >
+<v-container class="pa-2 edit-form" >
   <div v-if="this.currentItem">
-    <p class="headline">Item details</p>
+    <h1>Item details</h1>
 
     <v-form ref="form" lazy-validation>
       <v-text-field
@@ -235,7 +235,7 @@ export default {
 
 <style>
 .edit-form {
-  max-width: 300px;
+  max-width: 50%;
   margin: auto;
 }
 </style>

@@ -1,29 +1,68 @@
 <template>
   <v-app>
-    <v-toolbar max-height=5% dark class="blue accent-4">
-      <v-toolbar-title class="headline text-uppercase">
-        <span>LeutMesiene &nbsp;</span>
-        <span class="font-weight-light">Hacker Cheatsheet</span>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      clipped
+    >
+      <v-list dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.text"
+          :to="item.to"
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.text }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-app-bar
+      app
+      clipped-left
+      color="lime darken-2"
+      dense
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-icon class="mx-4">mdi-incognito</v-icon>
+      <v-toolbar-title class="mr-12 align-center">
+        <span class="title">LeutMesiene - Hacker Cheatsheet</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        href="https://github.com/mauritsmaas/LeutMesiene"
-      >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
-    </v-toolbar>
+    </v-app-bar>
 
     <v-content>
-      <router-view />
+      <v-container fluid fill-height>
+        <v-layout fluid>
+          <router-view></router-view>
+        </v-layout>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
 
 
+
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+   data: () => ({
+      drawer: null,
+      items: [
+        { icon: 'mdi-database-lock', text: 'List of items', to: 'items' },
+        { icon: 'mdi-account', text: 'Author' , to: 'profile'}
+      ]
+    }),
+
+  created () {
+      this.$vuetify.theme.dark = true
+  }
 }
 </script>
 
