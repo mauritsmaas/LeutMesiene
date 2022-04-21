@@ -1,56 +1,196 @@
 <template>
-  <div v-if="currentItem" class="edit-form py-3">
-    <p class="headline">Edit Item</p>
+<v-container class="pa-2" >
+  <div v-if="this.currentItem">
+    <p class="headline">Item details</p>
 
     <v-form ref="form" lazy-validation>
       <v-text-field
-        v-model="currentItem.name"
-        :rules="[(v) => !!v || 'Title is required']"
-        label="Title"
-        required
+        v-model="currentItem.id"
+        label="ID"
+        readonly
+        shaped
+        filled
       ></v-text-field>
 
       <v-text-field
-        v-model="currentItem.description"
-        :rules="[(v) => !!v || 'Description is required']"
-        label="Description"
+        v-model="currentItem.name"
+        :rules="[(v) => !!v || 'Name is required']"
+        label="Name"
         required
+        outlined
       ></v-text-field>
 
-      <!-- <label><strong>Status:</strong></label>
-      {{ currentItem.published ? "Published" : "Pending" }} -->
+      <v-radio-group label="Type" v-model="currentItem.type">
+        <v-radio name="type" label="Tool" value="tool"></v-radio>
+        <v-radio name="type" label="Command" value="command"></v-radio>                
+      </v-radio-group>
 
-      <!-- <v-divider class="my-5"></v-divider>
+      <v-textarea
+          label="Description"
+          :rules="[(v) => !!v || 'Description is required']"
+          required
+          hint="Description, keywords"
+          v-model="currentItem.description"
+          outlined
+        ></v-textarea>
 
-      <v-btn v-if="currentItem.published"
-        @click="updatePublished(false)"
-        color="primary" small class="mr-2"
-      >
-        UnPublish
-      </v-btn> -->
+        <v-textarea
+          label="Usage"
+          :rules="[(v) => !!v || 'Usage is required']"
+          required
+          hint="Usage, commands"
+          v-model="currentItem.usage"
+          outlined
+        ></v-textarea>
 
-      <!-- <v-btn v-else
-        @click="updatePublished(true)"
-        color="primary" small class="mr-2"
-      >
-        Publish
-      </v-btn> -->
+        <v-text-field
+        v-model="currentItem.source"
+        label="Source/site"
+        :rules="[(v) => !!v || 'Usage is required']"
+        required
+        outlined
+      ></v-text-field>
 
-      <v-btn color="error" small class="mr-2" >
-        Delete
-      </v-btn>
+      <v-text-field
+        v-model="currentItem.cve"
+        label="CVE"
+        outlined
+      ></v-text-field>
 
-      <v-btn color="success" small >
-        Update
-      </v-btn>
+      <v-row>
+        <v-col>
+          <p>Attack OS(es)</p>
+        </v-col>
+      </v-row>
+      <hr>
+      <v-row>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="attack_oses"
+              label="linux"
+              value="linux"
+              hide-details
+            ></v-checkbox>
+            <v-checkbox
+              v-model="attack_oses"
+              label="windows"
+              value="windows"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="attack_oses"
+              label="mac"
+              value="mac"
+              hide-details
+            ></v-checkbox>
+            <v-checkbox
+              v-model="attack_oses"
+              label="other"
+              value="other"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <p>Phases</p>
+        </v-col>
+      </v-row>
+      <hr>
+
+        <v-row>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="recon"
+              value="recon"
+              hide-details
+            ></v-checkbox>
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="scanning"
+              value="scanning"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="initial foothold"
+              value="initial foothold"
+              hide-details
+            ></v-checkbox>
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="privesc"
+              value="privesc"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="maintaining access"
+              value="maintaining access"
+              hide-details
+            ></v-checkbox>
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="covering"
+              value="covering"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            sm="3"
+            md="3"
+          >
+            <v-checkbox
+              v-model="currentItem.phase"
+              label="general"
+              value="general"
+              hide-details
+            ></v-checkbox>
+          </v-col>
+        </v-row>
+
+      
+        <div class="text-center mt-3 pa-3">
+          <v-btn color="success"  @click="updateItem" >
+            Update
+          </v-btn>
+        </div>
     </v-form>
-
-    <p class="mt-3">{{ message }}</p>
   </div>
 
   <div v-else>
-    <p>Please click on a Tutorial...</p>
+    <p>Please select an item...</p>
   </div>
+</v-container>
 </template>
 
 <script>
@@ -60,8 +200,11 @@ export default {
   name: "tutorial",
   data() {
     return {
+      data: null,
       currentItem: null,
-      message: "",
+      typeActive: '',
+      attack_oses: []
+      
     };
   },
   methods: {
@@ -69,18 +212,23 @@ export default {
       const path = 'http://localhost:5000/api/item/'+ id;
       axios.get(path, )
         .then((res) => {
-          this.currentItem = res.data;
-          console.log(this.currentItem);
+          this.data = res.data;
+          this.currentItem = this.data.item
+          this.typeActive = this.currentItem.type
+          this.attack_oses.push(this.currentItem.attackos[0])
+          
         })
         .catch((error) => {
           console.error(error);
         });
-    }
+    },
+    updateItem() {
+      this.currentItem.attackos= this.attack_oses
+      console.log(this.currentItem)
+    },
   },
   mounted() {
-    this.message = "";
     this.getItem(this.$route.params.id);
-    console.log(this.$route.params.id)
   }
 };
 </script>

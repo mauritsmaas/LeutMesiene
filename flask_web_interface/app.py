@@ -39,8 +39,9 @@ def all_items():
 @app.route('/api/item/<id>', methods=['GET'])
 def item_details(id):
     item = getitembyid(id)
+    print(item.to_dict())
     return jsonify({
-        'item': item
+        'item': item.to_dict()
     })
 
 def startflask():

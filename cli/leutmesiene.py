@@ -126,9 +126,25 @@ def getitembyid(id):
                 WHERE i.id = ? '
 
         res = conn.execute(query, id)
-        item = res.fetchall()
-        print(item)
-        return item
+        i_res = res.fetchall()
+        item = i_res[0]
+
+        attackos_res = conn.execute('SELECT a.os FROM attack_oses a \
+                                    JOIN item_attackos ia \
+                                    ON a.id = ia.attackos_id \
+                                    WHERE ia.item_id = ?',
+                                    id).fetchall()
+        attackoses = []
+        for aos in attackos_res:
+            attackoses.extend(aos)
+
+        #print(attackoses)
+
+        print(item[0])
+        #Put all the data in object and list
+        i = Item(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7], attackoses)
+        
+        return i
     # except Exception as e:
     #     print(e)
 
