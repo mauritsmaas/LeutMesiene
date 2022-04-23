@@ -5,8 +5,11 @@ import sys
 import time
 from pyfiglet import Figlet
 from clint.textui import colored
+from tabulate import tabulate
 import sqlite3
 import inspect
+from prettytable import PrettyTable
+from textwrap import fill
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -51,7 +54,22 @@ class Item(object):
                     cve=self.cve,
                     phase=self.phase,
                     attackos=self.attackos)
+    
+    def __iter__(self):
+        return self
+    
+    
 
+    # def __iter__(self):
+    #     return iter(self.id,
+    #             self.name,
+    #             self.type,
+    #             self.description,
+    #             self.usage,
+    #             self.source,
+    #             self.cve,
+    #             self.phase,
+    #             self.attackos)
 
 def welcome(text):
     result = Figlet()
@@ -102,14 +120,32 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print("Itemlist\n")
-            i = getdbinfo()
-            print(i)
+            print_allitems()
         elif c == '2':
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Search window')
         elif c == '0':
             return
+
+
+def print_allitems():
+    head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]
+    items = getdbinfo()
+
+    ## Tabulate solution
+    ITER_items=[]
+    for item in items:
+        ITER_items.append([item.id, item.name, item.type,  fill(item.description, width=30), fill(item.usage, width=30), fill(item.source, width=30), item.cve, item.phase, item.attackos])
+    print(tabulate(ITER_items, headers=head, tablefmt="fancy_grid"))
+
+    ## PrettyTable solution
+    # table = PrettyTable(head, align='c')
+    # items = getdbinfo()
+    # for item in items:
+    #     table.add_row([item.id, item.name, item.type, fill(item.description, width=30), fill(item.usage, width=30), fill(item.source, width=30), item.cve, item.phase, item.attackos])
+    # print(table.get_string(border=True))
+
 
 
 def getdbinfo():

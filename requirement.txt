@@ -3,5 +3,7 @@ clint
 sqlite3
 flask
 flask-cors
+prettytable
+tabulate
 
 ##vue-cli, vuetify, axios with npm
