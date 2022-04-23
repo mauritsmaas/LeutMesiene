@@ -4,7 +4,7 @@ The knowledge/cheatsheet of a lazy hacker who doesn't want to go through all his
 
 ### Implementation
 
-The LeutMesiene is developed in Python, further important libraries will be identified later. The tool will consist of a commandline interface but also have a web interface. The choice for both ways was made because in a web interface everything can be structured more clearly. In addition, this tool is also a good exercise to keep up the programming skills of the owner, it is considered a win/win situation.
+The LeutMesiene is developed in Python, using default libraries for the CLI implementation and Flask with Vuetify for the web interface. Both of these interfaces are backed with a local DB-file which hold all the items (commands, tools). The choice for both ways was made because in a web interface everything can be structured more clearly and the CLI for the fast usage or for the situation when there is only a commandline available. In addition, is this tool also a good exercise to keep up the programming skills of the author, so it can be considered as a win/win situation.
 
 #### Author
 
