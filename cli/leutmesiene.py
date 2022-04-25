@@ -131,47 +131,61 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Adding item')
-            #verify_site("http://nu.nl")
+            #verify_attackos("maecd, windfows")
             additemcli()
         elif c == '0':
             return
 
 def additemcli():
-    name = input("\nName : ")
-    if verify_input(name):
-        type = input("Type [tool/command] : ")
-        veri_type = verify_type(type)
-        if veri_type != False:
-            type = veri_type
-            description = input("Description (optional keywords) : ")
-            if verify_input(description):
-                usage = input("Usage : ")
-                if verify_input(usage):
-                    source = input("Source/site : ")
-                    if verify_site(source):
-                        cve = input("CVE (can be blank) [format=cve-year-serialnumber] : ")
-                        if verify_cve(cve.lower()):
-                            cve = cve.lower()
-                            print("CVE good")
-                            ## IMPLEMENT no cve input with NA 
-                        else:
-                            print("CVE is in wrong format, make sure you use: cve-year-serialnumber")
+    while True:
+        name = input("\nName : ")
+        if verify_input(name):
+            type = input("Type [tool/command] : ")
+            veri_type = verify_type(type)
+            if veri_type != False:
+                type = veri_type
+                description = input("Description (optional keywords) : ")
+                if verify_input(description):
+                    usage = input("Usage : ")
+                    if verify_input(usage):
+                        source = input("Source/site : ")
+                        if verify_site(source):
+                            cve = input("CVE (can be blank) [format=cve-year-serialnumber] : ").lower()
+                            if verify_cve(cve) == 1:
+                                print("CVE given is good") 
+                            elif verify_cve(cve) == 2:
+                                print("CVE not given")
+                                cve = 'na'
+                            else:
+                                print("CVE is in wrong format, make sure you use: cve-year-serialnumber")
+                                break
+                            phase = input("Phase (options= recon, scanning, initial foothold, privesc, maintain access, covering or general) : ")
+                            match, phase = verify_phase(phase)
+                            if match:
+                                attackos = input("Attack OS(es) (options= linux, windows, mac or other) [if multiple split with comma ','] : ")
+                                match_os, attackos_list = verify_attackos(attackos)
+                                if match_os:
+                                    print(attackos_list)
+                                    print('We have all the input together, confirm')
+                                    ## TODO implement function for confirming data and put in DB
+                                    print(name, type,description,usage,source,cve,phase, attackos_list)
+                                else:
+                                    print('Unable to match any OS on the input:', attackos)
+                            else:
+                                print("Could not match any phase on input:", phase)
+                    else:
+                        print('Please fill in the usage, try again')
+                        break
                 else:
-                    print('Please fill in the usage, try again')
+                    print('Please fill in the description, try again')
+                    break
             else:
-                print('Please fill in the description, try again')
+                print("Type is not a command or tool, try again")
+                break
         else:
-            print("Type is not a command or tool, try again")
-            return
-
-    print(name, type,description,usage,source)
-    # description = input("Description (optional keywords) : ")
-    # usage = input("Usage : ")
-    # source = input("Source/site : ")
-    # cve = input("CVE (can be blank) : ")
-    # phase = input("Phase (options= recon, scanning, initial foothold, privesc, maintain access, covering or general) : ")
-    # attackos = input("Attack OS(es) (options= linux, windows, mac or other) [if multiple split with comma ','] : ")
-    # print(name, type, description, usage, source, cve, phase, attackos)
+            print("Please give the item a name!")
+            break
+        print(name, type,description,usage,source,cve, phase, attackos_list)
 
 
 ## Verify fields section
@@ -203,8 +217,33 @@ def verify_site(site):
 
 def verify_cve(cve):
     if re.findall("\Acve-[0-9][0-9][0-9][0-9]-", cve):
-        return True
+        return 1
+    elif verify_input(cve) == False:
+        return 2
     return False
+
+def verify_phase(phase):
+    list = ['recon', 'scanning', 'initial' 'foothold', 'privesc', 'maintain access', 'covering', 'general']
+    for p in list:
+        if (phase.lower()).find(p.lower()) != -1:
+            return True, p
+    return False, phase
+
+def verify_attackos(attackoses):
+    attackos_values = ['linux', 'windows', 'mac', 'other']
+    inputlist = attackoses.lower().split(',')
+    for item in inputlist:
+        item.lower()
+        item.strip()
+    final_list = []
+    for a in attackos_values:
+        for inputos in inputlist:
+            if inputos.find(a) != -1:
+                final_list.append(a)
+    if final_list:
+        return True, final_list
+    else:
+        return False, final_list
 
 def print_allitems():
     head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]

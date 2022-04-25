@@ -1,6 +1,6 @@
 pyfiglet
 clint
-sqlite3
+##sqlite3
 flask
 flask-cors
 prettytable
