@@ -2,6 +2,7 @@
 from json import JSONEncoder
 import os
 import sys
+import re
 import time
 from pyfiglet import Figlet
 from clint.textui import colored
@@ -113,6 +114,7 @@ def startcommandline():
         print("Please select an option: ")
         print("""\t1 : List items
         2 : Search items
+        3 : Add item
         0 : Back""")
         c = input("\nEnter your choice : ")
 
@@ -125,9 +127,84 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Search window')
+        elif c == '3':
+            os.system("clear")
+            print(welcome("LeutMesiene"))
+            print('Adding item')
+            #verify_site("http://nu.nl")
+            additemcli()
         elif c == '0':
             return
 
+def additemcli():
+    name = input("\nName : ")
+    if verify_input(name):
+        type = input("Type [tool/command] : ")
+        veri_type = verify_type(type)
+        if veri_type != False:
+            type = veri_type
+            description = input("Description (optional keywords) : ")
+            if verify_input(description):
+                usage = input("Usage : ")
+                if verify_input(usage):
+                    source = input("Source/site : ")
+                    if verify_site(source):
+                        cve = input("CVE (can be blank) [format=cve-year-serialnumber] : ")
+                        if verify_cve(cve.lower()):
+                            cve = cve.lower()
+                            print("CVE good")
+                            ## IMPLEMENT no cve input with NA 
+                        else:
+                            print("CVE is in wrong format, make sure you use: cve-year-serialnumber")
+                else:
+                    print('Please fill in the usage, try again')
+            else:
+                print('Please fill in the description, try again')
+        else:
+            print("Type is not a command or tool, try again")
+            return
+
+    print(name, type,description,usage,source)
+    # description = input("Description (optional keywords) : ")
+    # usage = input("Usage : ")
+    # source = input("Source/site : ")
+    # cve = input("CVE (can be blank) : ")
+    # phase = input("Phase (options= recon, scanning, initial foothold, privesc, maintain access, covering or general) : ")
+    # attackos = input("Attack OS(es) (options= linux, windows, mac or other) [if multiple split with comma ','] : ")
+    # print(name, type, description, usage, source, cve, phase, attackos)
+
+
+## Verify fields section
+def verify_input(text):
+    if re.findall("\w", text):
+        return True
+    return False
+
+def verify_type(type):
+    if type.find('command') != -1:
+        return "command"
+    elif type.find('tool') != -1:
+        return "tool"
+    return False
+
+def verify_site(site):
+    regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain
+        r'localhost|' #localhost
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+    if re.match(regex, site):
+        return True
+    else:
+        return False
+
+def verify_cve(cve):
+    if re.findall("\Acve-[0-9][0-9][0-9][0-9]-", cve):
+        return True
+    return False
 
 def print_allitems():
     head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]
@@ -145,8 +222,6 @@ def print_allitems():
     # for item in items:
     #     table.add_row([item.id, item.name, item.type, fill(item.description, width=30), fill(item.usage, width=30), fill(item.source, width=30), item.cve, item.phase, item.attackos])
     # print(table.get_string(border=True))
-
-
 
 def getdbinfo():
     try:
@@ -203,8 +278,6 @@ def getitembyid(id):
         attackoses = []
         for aos in attackos_res:
             attackoses.extend(aos)
-
-        # print(attackoses)
 
         print(item[0])
         # Put all the data in object and list
