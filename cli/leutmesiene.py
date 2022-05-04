@@ -41,6 +41,17 @@ class Item(object):
         self.attackos = attackos
         self.phase = phase
 
+    def create(self, name, type, description, usage, source, cve, phase, attackos):
+        self.name = name
+        self.type = type
+        self.description = description
+        self.usage = usage
+        self.source = source
+        self.cve = cve
+        self.attackos = attackos
+        self.phase = phase
+
+
     def set_attackos(self, attackos):
         self.attackos.append(attackos)
 
@@ -58,19 +69,7 @@ class Item(object):
     
     def __iter__(self):
         return self
-    
-    
 
-    # def __iter__(self):
-    #     return iter(self.id,
-    #             self.name,
-    #             self.type,
-    #             self.description,
-    #             self.usage,
-    #             self.source,
-    #             self.cve,
-    #             self.phase,
-    #             self.attackos)
 
 def welcome(text):
     result = Figlet()
@@ -131,7 +130,8 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Adding item')
-            #verify_attackos("maecd, windfows")
+            #test purpose
+            #print(convert_attackos('windows'))
             additemcli()
         elif c == '0':
             return
@@ -168,7 +168,8 @@ def additemcli():
                                     print(attackos_list)
                                     print('We have all the input together, confirm')
                                     ## TODO implement function for confirming data and put in DB
-                                    print(name, type,description,usage,source,cve,phase, attackos_list)
+                                    
+                                    add_item_db(name, type,description,usage,source,cve,phase, attackos_list)
                                 else:
                                     print('Unable to match any OS on the input:', attackos)
                             else:
@@ -186,6 +187,7 @@ def additemcli():
             print("Please give the item a name!")
             break
         print(name, type,description,usage,source,cve, phase, attackos_list)
+        break
 
 
 ## Verify fields section
@@ -200,6 +202,12 @@ def verify_type(type):
     elif type.find('tool') != -1:
         return "tool"
     return False
+
+def convert_type(type):
+    if type == 'command':
+        return 1
+    elif type == 'tool':
+        return 2
 
 def verify_site(site):
     regex = re.compile(
@@ -223,11 +231,27 @@ def verify_cve(cve):
     return False
 
 def verify_phase(phase):
-    list = ['recon', 'scanning', 'initial' 'foothold', 'privesc', 'maintain access', 'covering', 'general']
+    list = ['recon', 'scanning', 'initial foothold', 'privesc', 'maintain access', 'covering', 'general']
     for p in list:
         if (phase.lower()).find(p.lower()) != -1:
             return True, p
     return False, phase
+
+def convert_phase(phase):
+    if phase == 'recon':
+        return 1
+    elif phase == 'scanning':
+        return 2
+    elif phase == 'initial foothold':
+        return 3
+    elif phase == 'privesc':
+        return 4
+    elif phase == 'maintain access':
+        return 5
+    elif phase == 'covering':
+        return 6
+    elif phase == 'general':
+        return 7
 
 def verify_attackos(attackoses):
     attackos_values = ['linux', 'windows', 'mac', 'other']
@@ -244,6 +268,17 @@ def verify_attackos(attackoses):
         return True, final_list
     else:
         return False, final_list
+
+
+def convert_attackos(os):
+    if os == 'linux':
+        return 1
+    elif os == 'windows':
+        return 2
+    elif os == 'mac':
+        return 3
+    elif os == 'other':
+        return 4
 
 def print_allitems():
     head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]
@@ -294,6 +329,23 @@ def getdbinfo():
         print(e)
 
 
+def getitemid_byname(name):
+    try:
+        # Make connection with db file
+        conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
+
+        # Query to get all the items in db
+        query = 'SELECT id FROM items \
+                    WHERE name = ? '
+
+        res = conn.execute(query, name)
+        i_res = res.fetchall()
+        id = i_res[0]
+
+        return id
+    except Exception as e:
+        print(e)
+
 def getitembyid(id):
     try:
         # Make connection with db file
@@ -327,6 +379,29 @@ def getitembyid(id):
     except Exception as e:
         print(e)
 
+def add_item_db(name, type,description,usage,source,cve,phase, attackos_list):
+    try:
+        # Make connection with db file
+        conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
+        cur = conn.cursor()
+
+        # Insert items
+        cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
+        ( name, convert_type(type), description, usage, source ,cve, convert_phase(phase) ))
+
+        conn.commit()
+
+        # Check for new id
+        item_id = getitemid_byname(name)
+
+        # Insert many-to-many
+        for os in attackos_list:
+            cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (item_id, convert_attackos(os)))
+        
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     main()
