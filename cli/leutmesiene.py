@@ -131,7 +131,7 @@ def startcommandline():
             print(welcome("LeutMesiene"))
             print('Adding item')
             #test purpose
-            #print(convert_attackos('windows'))
+            #print(getitemid_byname("GTFO-bins"))
             additemcli()
         elif c == '0':
             return
@@ -335,14 +335,13 @@ def getitemid_byname(name):
         conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
 
         # Query to get all the items in db
-        query = 'SELECT id FROM items \
+        query = 'SELECT MAX(id) FROM items \
                     WHERE name = ? '
 
-        res = conn.execute(query, name)
-        i_res = res.fetchall()
-        id = i_res[0]
+        res = conn.execute(query, (name,))
+        i_res = res.fetchone()
 
-        return id
+        return i_res[0]
     except Exception as e:
         print(e)
 
