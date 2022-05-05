@@ -219,23 +219,14 @@ export default {
     },
     updateItem() {
       console.log(this.currentItem)
+      const path = 'http://127.0.0.1:5000/api/item/'+ this.currentItem.id +'/update'
+      axios.post(path, this.currentItem
+      ).then(response => {
+        console.log(response);
+      }).catch(err =>{
+        console.log(err);
+      });
     },
-    // checkOses(self) {
-    // this.currentItem.attackos.forEach(os => {
-    //     if (os == 'linux') {
-    //       self.linux = true
-    //     }
-    //     else if (os == 'windows'){
-    //       self.windows = true  
-    //     }
-    //     else if (os == 'mac'){
-    //       self.mac = true  
-    //     }
-    //     else if (os == 'other'){
-    //       self.other = true  
-    //     }
-    // });
-    // }
   },
   mounted() {
     this.getItem(this.$route.params.id);

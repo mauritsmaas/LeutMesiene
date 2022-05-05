@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from ast import Return
 from json import JSONEncoder
 import os
 import sys
@@ -130,9 +131,12 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Adding item')
+
             #test purpose
-            #print(getitemid_byname("GTFO-bins"))
-            additemcli()
+            print(verify_id())
+
+            #real functionalite
+            #additemcli()
         elif c == '0':
             return
 
@@ -165,10 +169,7 @@ def additemcli():
                                 attackos = input("Attack OS(es) (options= linux, windows, mac or other) [if multiple split with comma ','] : ")
                                 match_os, attackos_list = verify_attackos(attackos)
                                 if match_os:
-                                    print(attackos_list)
-                                    print('We have all the input together, confirm')
-                                    ## TODO implement function for confirming data and put in DB
-                                    
+                                    ## TODO implement function for confirming data            
                                     add_item_db(name, type,description,usage,source,cve,phase, attackos_list)
                                 else:
                                     print('Unable to match any OS on the input:', attackos)
@@ -191,6 +192,14 @@ def additemcli():
 
 
 ## Verify fields section
+def verify_id(id):
+    try:
+        if id > 0:
+            return True
+    except Exception:
+        return False
+    return False
+
 def verify_input(text):
     if re.findall("\w", text):
         return True
@@ -226,8 +235,10 @@ def verify_site(site):
 def verify_cve(cve):
     if re.findall("\Acve-[0-9][0-9][0-9][0-9]-", cve):
         return 1
-    elif verify_input(cve) == False:
+    elif verify_input(cve) == False :
         return 2
+    elif cve == 'na' or cve == 'NA':
+        return 3
     return False
 
 def verify_phase(phase):
@@ -269,6 +280,15 @@ def verify_attackos(attackoses):
     else:
         return False, final_list
 
+def verify_attack0s(attackos_list):
+    list = ['linux', 'windows', 'mac', 'other']
+    finallist = []
+    for a in attackos_list:
+        for os in list:
+            if (a.lower()).find(os.lower()) != -1:
+                finallist.append(os)
+            return True, finallist
+    return False
 
 def convert_attackos(os):
     if os == 'linux':
@@ -279,6 +299,48 @@ def convert_attackos(os):
         return 3
     elif os == 'other':
         return 4
+
+def verification_all_values(id, name, type, description, usage, source, cve, attackos, phase):
+    if verify_id(id):
+        if verify_input(name):
+            veri_type = verify_type(type)
+            if veri_type != False:
+                type = veri_type
+                if verify_input(description):
+                    if verify_input(usage):
+                        if verify_site(source):
+                            if verify_cve(cve) == 1:
+                                cve = cve.lower()
+                            elif verify_cve(cve) == 2:
+                                cve = 'na'
+                            elif verify_cve(cve) == 3:
+                                cve = 'na'
+                            else:
+                                return False
+                            if verify_phase(phase):
+                                match_os, attackos_list = verify_attack0s(attackos)
+                                attackos = attackos_list
+                                if match_os:
+                                    print("Done")
+                                    print(id,name, type,description,usage,source,cve,phase, attackos)
+                                    return True
+                                    #everything checked
+                                    #add_item_db(name, type,description,usage,source,cve,phase, attackos_list)
+                                else:
+                                    return False
+                            else:
+                                return False
+                    else:
+                        return False
+                else:
+                    return False    
+            else:
+                return False
+        else:
+            return False
+    else:
+        return False
+            
 
 def print_allitems():
     head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]
@@ -401,6 +463,13 @@ def add_item_db(name, type,description,usage,source,cve,phase, attackos_list):
         conn.close()
     except Exception as e:
         print(e)
+
+def update_item(id, name, type, description, usage, source, cve, attackos, phase):
+    if verification_all_values(id, name, type, description, usage, source, cve, attackos, phase):
+        print('true')
+    
+    ##TODO logic for update query with new value
+    print('update logic')
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ import os
 import sys
 import json
 import inspect
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -34,6 +34,25 @@ def all_items():
     items = getdbinfo()
     return jsonify({
         'items': [i.to_dict() for i in items]
+    })
+
+@app.route('/api/item/<id>/update', methods=['POST'])
+def item_update(id):
+    req = request.get_json()
+    id = req['id']
+    name = req['name']
+    type = req['type']
+    description = req['description']
+    usage = req['usage']
+    source = req['source']
+    cve = req['cve']
+    attackos = req['attackos']
+    phase = req['phase']
+
+    update_item(id, name, type, description, usage, source, cve, attackos, phase)
+    #print(req)
+    return jsonify({
+        'item': req
     })
 
 @app.route('/api/item/<id>', methods=['GET'])
