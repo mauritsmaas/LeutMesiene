@@ -70,13 +70,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="attack_oses"
+              v-model="currentItem.attackos"
               label="linux"
               value="linux"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="attack_oses"
+              v-model="currentItem.attackos"
               label="windows"
               value="windows"
               hide-details
@@ -88,13 +88,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="attack_oses"
+              v-model="currentItem.attackos"
               label="mac"
               value="mac"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="attack_oses"
+              v-model="currentItem.attackos"
               label="other"
               value="other"
               hide-details
@@ -153,8 +153,8 @@
           >
             <v-checkbox
               v-model="currentItem.phase"
-              label="maintaining access"
-              value="maintaining access"
+              label="maintain access"
+              value="maintain access"
               hide-details
             ></v-checkbox>
             <v-checkbox
@@ -198,13 +198,10 @@ import axios from 'axios';
 
 export default {
   name: "tutorial",
-  data() {
+  data: function() {
     return {
       data: null,
       currentItem: null,
-      typeActive: '',
-      attack_oses: []
-      
     };
   },
   methods: {
@@ -214,18 +211,31 @@ export default {
         .then((res) => {
           this.data = res.data;
           this.currentItem = this.data.item
-          this.typeActive = this.currentItem.type
-          this.attack_oses.push(this.currentItem.attackos[0])
-          
+          //console.log(this.currentItem.attackos)
         })
         .catch((error) => {
           console.error(error);
         });
     },
     updateItem() {
-      this.currentItem.attackos= this.attack_oses
       console.log(this.currentItem)
     },
+    // checkOses(self) {
+    // this.currentItem.attackos.forEach(os => {
+    //     if (os == 'linux') {
+    //       self.linux = true
+    //     }
+    //     else if (os == 'windows'){
+    //       self.windows = true  
+    //     }
+    //     else if (os == 'mac'){
+    //       self.mac = true  
+    //     }
+    //     else if (os == 'other'){
+    //       self.other = true  
+    //     }
+    // });
+    // }
   },
   mounted() {
     this.getItem(this.$route.params.id);
