@@ -206,7 +206,7 @@ export default {
   },
   methods: {
     getItem(id) {
-      const path = 'http://localhost:5000/api/item/'+ id;
+      const path = 'http://127.0.0.1:5000/api/item/'+ id;
       axios.get(path, )
         .then((res) => {
           this.data = res.data;

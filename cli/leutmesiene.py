@@ -133,9 +133,9 @@ def startcommandline():
             print('Adding item')
 
             #test purpose
-            print(verify_id())
+            print(verify_id(88))
 
-            #real functionalite
+            #real functionality
             #additemcli()
         elif c == '0':
             return
@@ -319,13 +319,11 @@ def verification_all_values(id, name, type, description, usage, source, cve, att
                                 return False
                             if verify_phase(phase):
                                 match_os, attackos_list = verify_attack0s(attackos)
-                                attackos = attackos_list
                                 if match_os:
                                     print("Done")
                                     print(id,name, type,description,usage,source,cve,phase, attackos)
-                                    return True
                                     #everything checked
-                                    #add_item_db(name, type,description,usage,source,cve,phase, attackos_list)
+                                    return True
                                 else:
                                     return False
                             else:
@@ -417,25 +415,26 @@ def getitembyid(id):
                     INNER JOIN types t ON i.type_id = t.id \
                     INNER JOIN phases p ON i.phase_id = p.id \
                     WHERE i.id = ? '
-
-        res = conn.execute(query, id)
+        print('Succes until first execute')
+        res = conn.execute("SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
+                    INNER JOIN types t ON i.type_id = t.id \
+                    INNER JOIN phases p ON i.phase_id = p.id \
+                    WHERE i.id = '{}'".format(id))
         i_res = res.fetchall()
         item = i_res[0]
 
-        attackos_res = conn.execute('SELECT a.os FROM attack_oses a \
+        attackos_res = conn.execute("SELECT a.os FROM attack_oses a \
                                         JOIN item_attackos ia \
                                         ON a.id = ia.attackos_id \
-                                        WHERE ia.item_id = ?',
-                                    id).fetchall()
+                                        WHERE ia.item_id = '{}'".format(id)).fetchall()
         attackoses = []
         for aos in attackos_res:
             attackoses.extend(aos)
 
-        print(item[0])
         # Put all the data in object and list
         i = Item(item[0], item[1], item[2], item[3], item[4],
                 item[5], item[6], item[7], attackoses)
-
+        
         return i
     except Exception as e:
         print(e)
@@ -448,7 +447,7 @@ def add_item_db(name, type,description,usage,source,cve,phase, attackos_list):
 
         # Insert items
         cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
-        ( name, convert_type(type), description, usage, source ,cve, convert_phase(phase) ))
+        (name, convert_type(type), description, usage, source ,cve, convert_phase(phase) ))
 
         conn.commit()
 
@@ -467,9 +466,39 @@ def add_item_db(name, type,description,usage,source,cve,phase, attackos_list):
 def update_item(id, name, type, description, usage, source, cve, attackos, phase):
     if verification_all_values(id, name, type, description, usage, source, cve, attackos, phase):
         print('true')
+        #try:
+        # Make connection with db file
+        conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
+        cur = conn.cursor()
+
+        # Update item
+        cur.execute('UPDATE items \
+                    SET name = ?, \
+                        type_id = ?, \
+                        description = ?, \
+                        usage = ?, \
+                        source = ?, \
+                        cve = ?, \
+                        phase_id = ? \
+                    WHERE id = ?' , 
+        (name, convert_type(type), description, usage, source ,cve, convert_phase(phase), id ))
+
+        conn.commit()
+        # Delete old many-to-many
+        cur.execute('DELETE FROM item_attackos \
+                    WHERE item_id = ?', (id,))
+        conn.commit()
+
+        # Insert many-to-many
+        for os in attackos:
+            cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (id, convert_attackos(os)))
+        conn.commit()
+        conn.close()
+        #except Exception as e:
+            #print(e)
     
-    ##TODO logic for update query with new value
-    print('update logic')
+    ##TODO logic for update query with new values
+    print('updated the item in DB')
 
 if __name__ == "__main__":
     main()

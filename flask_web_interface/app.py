@@ -16,7 +16,7 @@ app = Flask(__name__,
             static_folder = "../frontend/dist/static",
             template_folder = "../frontend/dist")
 
-# Hanles the Cross Origin Resource Sharing, https://flask-cors.readthedocs.io/en/latest/
+# Handles the Cross Origin Resource Sharing, https://flask-cors.readthedocs.io/en/latest/
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 #Catch the different paths and use the vue-router
@@ -39,7 +39,7 @@ def all_items():
 @app.route('/api/item/<id>/update', methods=['POST'])
 def item_update(id):
     req = request.get_json()
-    id = req['id']
+    item_id = req['id']
     name = req['name']
     type = req['type']
     description = req['description']
@@ -49,10 +49,14 @@ def item_update(id):
     attackos = req['attackos']
     phase = req['phase']
 
-    update_item(id, name, type, description, usage, source, cve, attackos, phase)
-    #print(req)
+    print(item_id)
+
+    update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
+    
+    item_new = getitembyid(item_id)
+    print(item_new)
     return jsonify({
-        'item': req
+        'item': item_new.to_dict()
     })
 
 @app.route('/api/item/<id>', methods=['GET'])
