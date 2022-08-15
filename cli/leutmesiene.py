@@ -131,12 +131,11 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Adding item')
-
             #test purpose
-            print(verify_id(88))
+            #print(verify_id(88))
 
             #real functionality
-            #additemcli()
+            additemcli()
         elif c == '0':
             return
 

@@ -29,6 +29,7 @@ Tutorial with vue.js and flask:
 https://codeburst.io/full-stack-single-page-application-with-vue-js-and-flask-b1e036315532
 
 ### Functionalities
-- item list on flask site
-- Update local db-file if needed at end of session
+- Web frontend to add item
+- Authentication mechanism
+- Copy button
 - No result check ippsec
