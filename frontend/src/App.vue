@@ -56,6 +56,7 @@ export default {
       drawer: null,
       items: [
         { icon: 'mdi-database-lock', text: 'List of items', to: 'items' },
+        { icon: 'mdi-plus-circle-outline', text: 'Add new item', to: 'add-item' },
         { icon: 'mdi-account', text: 'Author' , to: 'profile'}
       ]
     }),

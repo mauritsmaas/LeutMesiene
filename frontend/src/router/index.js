@@ -6,6 +6,7 @@ import NotFound from '../views/NotFound.vue'
 import HelloWorld from '../components/HelloWorld'
 import Items from '../views/items'
 import Item from '../views/Item'
+import AddItem from '../views/AddItem'
 
 // const routerOptions = [
 //   { path: '/', component: 'Home' },
@@ -50,6 +51,11 @@ export default new Router({
       path: "/item/:id",
       name: "item-details",
       component: Item
+    },
+    {
+      path: "/add-item",
+      name: "add-item",
+      component: AddItem
     },
     {
       path: '*',

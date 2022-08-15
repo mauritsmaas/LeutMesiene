@@ -68,7 +68,7 @@ def item_details(id):
     })
 
 def startflask():
-    app.run()
+    app.run(port=5001)
 
 if __name__ == "__main__":
     startflask()

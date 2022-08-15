@@ -1,26 +1,25 @@
 <template>
 <v-container class="pa-2 edit-form" >
-  <div v-if="this.currentItem">
-    <h1>Item details</h1>
+    <h1>New item</h1>
 
     <v-form ref="form" lazy-validation>
-      <v-text-field
+      <!-- <v-text-field
         v-model="currentItem.id"
         label="ID"
         readonly
         shaped
         filled
-      ></v-text-field>
+      ></v-text-field> -->
 
       <v-text-field
-        v-model="currentItem.name"
+        v-model="name"
         :rules="[(v) => !!v || 'Name is required']"
         label="Name"
         required
         outlined
       ></v-text-field>
 
-      <v-radio-group label="Type" v-model="currentItem.type">
+      <v-radio-group label="Type" v-model="type">
         <v-radio name="type" label="Tool" value="tool"></v-radio>
         <v-radio name="type" label="Command" value="command"></v-radio>                
       </v-radio-group>
@@ -30,7 +29,7 @@
           :rules="[(v) => !!v || 'Description is required']"
           required
           hint="Description, keywords"
-          v-model="currentItem.description"
+          v-model="description"
           outlined
         ></v-textarea>
 
@@ -39,12 +38,12 @@
           :rules="[(v) => !!v || 'Usage is required']"
           required
           hint="Usage, commands"
-          v-model="currentItem.usage"
+          v-model="usage"
           outlined
         ></v-textarea>
 
         <v-text-field
-        v-model="currentItem.source"
+        v-model="source"
         label="Source/site"
         :rules="[(v) => !!v || 'Usage is required']"
         required
@@ -52,7 +51,7 @@
       ></v-text-field>
 
       <v-text-field
-        v-model="currentItem.cve"
+        v-model="cve"
         label="CVE"
         outlined
       ></v-text-field>
@@ -70,13 +69,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.attackos"
+              v-model="attackos"
               label="linux"
               value="linux"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="currentItem.attackos"
+              v-model="attackos"
               label="windows"
               value="windows"
               hide-details
@@ -88,13 +87,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.attackos"
+              v-model="attackos"
               label="mac"
               value="mac"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="currentItem.attackos"
+              v-model="attackos"
               label="other"
               value="other"
               hide-details
@@ -116,13 +115,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="recon"
               value="recon"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="scanning"
               value="scanning"
               hide-details
@@ -134,13 +133,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="initial foothold"
               value="initial foothold"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="privesc"
               value="privesc"
               hide-details
@@ -152,13 +151,13 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="maintain access"
               value="maintain access"
               hide-details
             ></v-checkbox>
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="covering"
               value="covering"
               hide-details
@@ -170,7 +169,7 @@
             md="3"
           >
             <v-checkbox
-              v-model="currentItem.phase"
+              v-model="phase"
               label="general"
               value="general"
               hide-details
@@ -180,16 +179,11 @@
 
       
         <div class="text-center mt-3 pa-3">
-          <v-btn color="success"  @click="updateItem" >
-            Update
+          <v-btn color="success"  @click="AddItem" >
+            Add
           </v-btn>
         </div>
     </v-form>
-  </div>
-
-  <div v-else>
-    <p>Please select an item...</p>
-  </div>
 </v-container>
 </template>
 
@@ -201,35 +195,31 @@ export default {
   data: function() {
     return {
       data: null,
-      currentItem: null,
+      name: "",
+      type: "",
+      description: "",
+      usage: "",
+      source: "",
+      cve: "",
+      attackos: "",
+      phase: ""
+
     };
   },
   methods: {
-    getItem(id) {
-      const path = 'http://127.0.0.1:5001/api/item/'+ id;
-      axios.get(path, )
-        .then((res) => {
-          this.data = res.data;
-          this.currentItem = this.data.item
-          //console.log(this.currentItem.attackos)
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-    updateItem() {
-      console.log(this.currentItem)
-      const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/update'
-      axios.post(path, this.currentItem
-      ).then(response => {
-        console.log(response);
-      }).catch(err =>{
-        console.log(err);
-      });
+    AddItem() {
+      // console.log(this.currentItem)
+      // const path = 'http://127.0.0.1:5000/api/item/'+ this.currentItem.id +'/update'
+      // axios.post(path, this.currentItem
+      // ).then(response => {
+      //   console.log(response);
+      // }).catch(err =>{
+      //   console.log(err);
+      // });
     },
   },
   mounted() {
-    this.getItem(this.$route.params.id);
+      
   }
 };
 </script>

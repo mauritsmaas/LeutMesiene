@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getItems() {
-      const path = 'http://127.0.0.1:5000/api/items';
+      const path = 'http://127.0.0.1:5001/api/items';
       axios.get(path, )
         .then((res) => {
           //console.log(res.data.items);
