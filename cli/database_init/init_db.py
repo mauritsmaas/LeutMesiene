@@ -39,6 +39,10 @@ cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, 
 cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
 ('GTFO-bins', 2, 'check for misconfiguration in Unix binaries', 'search on website', 'https://gtfobins.github.io/', 'NA', 4))
 
+cur.execute("INSERT INTO items (name, type_id, description, usage, source, cve, phase_id) VALUES (?,?,?,?,?,?,?)", 
+("Upgrade shell", 1, "Python utility to upgrade simple bash shell to a fully interactive TTY. Python/Python3 is required", "python3 -c 'import pty; pty.spawn('/bin/bash')'" , 'https://0xffsec.com/handbook/shells/full-tty/', 'NA', 5))
+
+
 ## Insert many-to-many
 cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 1))
 cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 2))
@@ -46,6 +50,7 @@ cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1
 cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (1, 4))
 cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (2, 2))
 cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (3, 1))
+cur.execute("INSERT INTO item_attackos (item_id, attackos_id) VALUES (?, ?)", (4, 1))
 
 connection.commit()
 connection.close()
