@@ -45,13 +45,14 @@
         <v-text-field
         v-model="source"
         label="Source/site"
-        :rules="[(v) => !!v || 'Usage is required']"
+        :rules="[(v) => !!v || 'Source is required']"
         required
         outlined
       ></v-text-field>
 
       <v-text-field
         v-model="cve"
+        hint="Format: cve-year-serialnumber (cve-2022-1234) or leave empty"
         label="CVE"
         outlined
       ></v-text-field>
@@ -195,28 +196,40 @@ export default {
   data: function() {
     return {
       data: null,
+      currentItem: null,
       name: "",
       type: "",
       description: "",
       usage: "",
       source: "",
       cve: "",
-      attackos: "",
-      phase: ""
+      attackos: [],
+      phase: "",
+      
 
     };
   },
   methods: {
     AddItem() {
-      // console.log(this.currentItem)
-      // const path = 'http://127.0.0.1:5000/api/item/'+ this.currentItem.id +'/update'
-      // axios.post(path, this.currentItem
-      // ).then(response => {
-      //   console.log(response);
-      // }).catch(err =>{
-      //   console.log(err);
-      // });
+      this.currentItem = {name: this.name, 
+                          type: this.type,
+                          description: this.description,
+                          usage: this.usage,
+                          source: this.source,
+                          cve: this.cve,
+                          attackos: this.attackos,
+                          phase: this.phase}
+      console.log(this.currentItem)
+      
+      const path = 'http://127.0.0.1:5001/api/item/add'
+      axios.post(path, this.currentItem
+      ).then(response => {
+        console.log(response);
+      }).catch(err =>{
+        console.log(err);
+      });
     },
+    
   },
   mounted() {
       

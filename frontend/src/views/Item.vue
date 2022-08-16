@@ -46,7 +46,7 @@
         <v-text-field
         v-model="currentItem.source"
         label="Source/site"
-        :rules="[(v) => !!v || 'Usage is required']"
+        :rules="[(v) => !!v || 'Source is required']"
         required
         outlined
       ></v-text-field>
@@ -54,6 +54,7 @@
       <v-text-field
         v-model="currentItem.cve"
         label="CVE"
+        hint="Format: cve-year-serialnumber (cve-2022-1234) or leave empty"
         outlined
       ></v-text-field>
 

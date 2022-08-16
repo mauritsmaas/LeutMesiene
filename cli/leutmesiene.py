@@ -131,10 +131,6 @@ def startcommandline():
             os.system("clear")
             print(welcome("LeutMesiene"))
             print('Adding item')
-            #test purpose
-            #print(verify_id(88))
-
-            #real functionality
             additemcli()
         elif c == '0':
             return
@@ -320,9 +316,9 @@ def verification_all_values(id, name, type, description, usage, source, cve, att
                                 match_os, attackos_list = verify_attack0s(attackos)
                                 if match_os:
                                     print("Done")
-                                    print(id,name, type,description,usage,source,cve,phase, attackos)
+                                    print(name, type,description,usage,source,cve,phase, attackos)
                                     #everything checked
-                                    return True
+                                    return True, 
                                 else:
                                     return False
                             else:
@@ -338,6 +334,43 @@ def verification_all_values(id, name, type, description, usage, source, cve, att
     else:
         return False
             
+
+def verification_values_new_item(name, type, description, usage, source, cve, attackos, phase):
+    if verify_input(name):
+        veri_type = verify_type(type)
+        if veri_type != False:
+            type = veri_type
+            if verify_input(description):
+                if verify_input(usage):
+                    if verify_site(source):
+                        if verify_cve(cve) == 1:
+                            cve = cve.lower()
+                        elif verify_cve(cve) == 2:
+                           cve = 'na'
+                        elif verify_cve(cve) == 3:
+                            cve = 'na'
+                        else:
+                            return False
+                        if verify_phase(phase):
+                            match_os, attackos_list = verify_attack0s(attackos)
+                            if match_os:
+                                print("Done")
+                                print(name, type,description,usage,source,cve,phase, attackos)
+                                #everything checked
+                                return True
+                            else:
+                                return False
+                        else:
+                            return False
+                else:
+                    return False
+            else:
+                return False    
+        else:
+            return False
+    else:
+        return False
+    
 
 def print_allitems():
     head = ["id", "name", "type", "description", "usage", "source", "cve", "phase", "attack_oses"]
@@ -464,7 +497,6 @@ def add_item_db(name, type,description,usage,source,cve,phase, attackos_list):
 
 def update_item(id, name, type, description, usage, source, cve, attackos, phase):
     if verification_all_values(id, name, type, description, usage, source, cve, attackos, phase):
-        print('true')
         #try:
         # Make connection with db file
         conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
