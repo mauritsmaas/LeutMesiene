@@ -5,6 +5,7 @@ import json
 import inspect
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
+from flask import make_response
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -58,6 +59,25 @@ def item_update(id):
     return jsonify({
         'item': item_new.to_dict()
     })
+    
+
+@app.route('/api/item/add', methods=['POST'])
+def item_add():
+    req = request.get_json()
+    print(req)
+    if(verification_values_new_item(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["attackos"], req["phase"])):
+        print("check")
+        add_item_db(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["phase"], req["attackos"])
+        
+        item_new = getitembyid(getitemid_byname(req["name"]))
+        print(item_new)
+        return jsonify({
+            'item': item_new.to_dict()
+        })
+    else:
+        print("failed")
+        return app.make_response(("Syntax not right", 666))   
+    
 
 @app.route('/api/item/<id>', methods=['GET'])
 def item_details(id):
