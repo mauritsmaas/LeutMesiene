@@ -184,7 +184,12 @@
           <v-btn color="success"  @click="updateItem" >
             Update
           </v-btn>
+
+          <v-btn color="error"  @click="deleteItem" >
+            Delete
+          </v-btn>
         </div>
+
     </v-form>
   </div>
 
@@ -221,6 +226,16 @@ export default {
     updateItem() {
       console.log(this.currentItem)
       const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/update'
+      axios.post(path, this.currentItem
+      ).then(response => {
+        console.log(response);
+      }).catch(err =>{
+        console.log(err);
+      });
+    },
+    deleteItem() {
+      console.log(this.currentItem)
+      const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/delete'
       axios.post(path, this.currentItem
       ).then(response => {
         console.log(response);
