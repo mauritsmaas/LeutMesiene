@@ -225,8 +225,10 @@ export default {
       axios.post(path, this.currentItem
       ).then(response => {
         console.log(response);
+        this.$router.push("/item/"+ response.data.item.id)
       }).catch(err =>{
-        console.log(err);
+        console.log("failed")
+        this.$alert("You made a mistake with filling everything in", "Syntax error")
       });
     },
     
