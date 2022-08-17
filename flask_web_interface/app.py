@@ -98,9 +98,10 @@ def login():
     print(req)
 
     ## Logic to login 
-    #login()
+    if login_user(req["username"], req["password"]):
+        return app.make_response(("Welcome: "+ req["username"]))
+    return app.make_response(("Login failed"))
     
-    return app.make_response(("Welcome: "+ req["username"]))
 
 def startflask():
     app.run(port=5001)

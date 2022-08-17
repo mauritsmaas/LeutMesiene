@@ -19,6 +19,24 @@ sys.path.insert(0, parentdir)
 
 from flask_web_interface.app import *
 
+class User(object):
+
+    username = ""
+    password = ""
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+    
+    # to make it Json serializable
+    def to_dict(self):
+        return dict(username = self.username,
+                    password = self.password)
+    
+    def __iter__(self):
+        return self
+
+users = [User("test", "test"), User("aaa", "aaa")]
 
 class Item(object):
     id = 0
@@ -549,6 +567,13 @@ def deleteItem(id):
     except Exception as e:
         print(e)
 
+def login_user(username, password):
+    for user in users:
+        print(user.to_dict())
+        print(user.username, user.password, username, password)
+        if user.username == username and user.password == password:
+            return True
+    return False
 
 
 if __name__ == "__main__":
