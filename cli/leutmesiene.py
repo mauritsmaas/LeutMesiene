@@ -531,5 +531,26 @@ def update_item(id, name, type, description, usage, source, cve, attackos, phase
     ##TODO logic for update query with new values
     print('updated the item in DB')
 
+def deleteItem(id):
+    try:
+        # Make connection with db file
+        conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
+        cur = conn.cursor()
+
+        # Delete item in item table
+        cur.execute('DELETE FROM items \
+                    WHERE id = ?', (id,))
+        conn.commit()
+
+        # Delete many-to-many relations
+        cur.execute('DELETE FROM item_attackos \
+                    WHERE item_id = ?', (id,))
+        conn.commit()
+        
+    except Exception as e:
+        print(e)
+
+
+
 if __name__ == "__main__":
     main()

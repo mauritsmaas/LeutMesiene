@@ -89,10 +89,9 @@ def item_details(id):
 
 @app.route('/api/item/<id>/delete', methods=['DELETE'])
 def item_delete(id):
-    ## TODO delete function
-    ## deleteitem(id)
+    deleteItem(id)
     ## print(item.to_dict())
-    return app.make_response(("Item delete with ID:"+id))
+    return app.make_response(("Item with ID "+id)+" is deleted")
 
 def startflask():
     app.run(port=5001)

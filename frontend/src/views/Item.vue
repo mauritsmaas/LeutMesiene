@@ -236,9 +236,9 @@ export default {
     deleteItem() {
       console.log(this.currentItem)
       const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/delete'
-      axios.post(path, this.currentItem
+      axios.delete(path, this.currentItem
       ).then(response => {
-        console.log(response);
+        this.$alert(response.data, "Item deleted")
       }).catch(err =>{
         console.log(err);
       });
