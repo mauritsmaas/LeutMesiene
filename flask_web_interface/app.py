@@ -95,12 +95,16 @@ def item_delete(id):
 @app.route('/api/login', methods=['POST'])
 def login():
     req = request.get_json()
-    print(req)
 
     ## Logic to login 
-    if login_user(req["username"], req["password"]):
-        return app.make_response(("Welcome: "+ req["username"]))
-    return app.make_response(("Login failed"))
+    result = login_user(req["username"], req["password"])
+
+    if result != False :
+        return jsonify({
+            "user": result.username,
+            "token": "isnog362392"
+        })
+    return app.make_response(("Login failed", 666))
     
 
 def startflask():

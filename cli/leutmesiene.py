@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from ast import Return
 from json import JSONEncoder
 import os
 import sys
@@ -23,20 +22,23 @@ class User(object):
 
     username = ""
     password = ""
+    role = 0
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, role):
         self.username = username
         self.password = password
+        self.role = role
     
     # to make it Json serializable
     def to_dict(self):
         return dict(username = self.username,
-                    password = self.password)
+                    password = self.password,
+                    role = self.role)
     
     def __iter__(self):
         return self
 
-users = [User("test", "test"), User("aaa", "aaa")]
+users = [User("test", "test",0), User("aaa", "aaa",1)]
 
 class Item(object):
     id = 0
@@ -569,10 +571,10 @@ def deleteItem(id):
 
 def login_user(username, password):
     for user in users:
-        print(user.to_dict())
-        print(user.username, user.password, username, password)
+        # print(user.to_dict())
+        # print(user.username, user.password, username, password)
         if user.username == username and user.password == password:
-            return True
+            return user
     return False
 
 

@@ -37,6 +37,8 @@
 
 <script>
 import axios from 'axios';
+import { mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   data: function() {
@@ -48,6 +50,8 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setUser", "setToken"]),
+    ...mapGetters(["getUser"]),
     login() {
       this.user = {username: this.username,
                   password: this.password}
@@ -55,7 +59,10 @@ export default {
       const path = 'http://127.0.0.1:5001/api/login'
       axios.post(path, this.user
       ).then(response => {
-        console.log(response);
+        console.log(response.data["user"], response.data["token"] );
+        this.setUser(response.data["user"])
+        this.setToken(response.data["token"])
+        console.log(this.getUser)
       }).catch(err =>{
         console.log(err);
       });
