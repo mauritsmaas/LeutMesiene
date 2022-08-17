@@ -90,8 +90,17 @@ def item_details(id):
 @app.route('/api/item/<id>/delete', methods=['DELETE'])
 def item_delete(id):
     deleteItem(id)
-    ## print(item.to_dict())
     return app.make_response(("Item with ID "+id)+" is deleted")
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    req = request.get_json()
+    print(req)
+
+    ## Logic to login 
+    #login()
+    
+    return app.make_response(("Welcome: "+ req["username"]))
 
 def startflask():
     app.run(port=5001)

@@ -7,6 +7,7 @@ import HelloWorld from '../components/HelloWorld'
 import Items from '../views/items'
 import Item from '../views/Item'
 import AddItem from '../views/AddItem'
+import Login from '../views/Login'
 
 // const routerOptions = [
 //   { path: '/', component: 'Home' },
@@ -46,6 +47,11 @@ export default new Router({
       path: '/items',
      name: 'items',
      component: Items
+    },
+    {
+      path: '/login',
+     name: 'login',
+     component: Login
     },
     {
       path: "/item/:id",
