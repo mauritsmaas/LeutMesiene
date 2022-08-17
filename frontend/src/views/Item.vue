@@ -239,6 +239,7 @@ export default {
       axios.delete(path, this.currentItem
       ).then(response => {
         this.$alert(response.data, "Item deleted")
+        this.$router.push("/items")
       }).catch(err =>{
         console.log(err);
       });

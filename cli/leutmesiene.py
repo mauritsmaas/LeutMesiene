@@ -528,7 +528,6 @@ def update_item(id, name, type, description, usage, source, cve, attackos, phase
         #except Exception as e:
             #print(e)
     
-    ##TODO logic for update query with new values
     print('updated the item in DB')
 
 def deleteItem(id):
