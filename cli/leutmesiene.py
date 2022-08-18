@@ -4,6 +4,7 @@ import os
 import sys
 import re
 import time
+import jwt
 from pyfiglet import Figlet
 from clint.textui import colored
 from tabulate import tabulate
@@ -577,6 +578,46 @@ def login_user(username, password):
             return user
     return False
 
+## JWT handling
+
+SECRET_KEY = "CompuFun"
+
+def createJWTToken(user):
+    payload = {
+        "username": user.username,
+        "role" : user.role,
+        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+    }
+    encoded_data = jwt.encode(payload=payload, key=SECRET_KEY, algorithm="HS256")
+    return encoded_data
+
+def validate_token(token, user):
+    try:
+        decode_data = jwt.decode(jwt=token, \
+                            key=SECRET_KEY, algorithms="HS256")
+        print(decode_data)
+        return True, token
+    except Exception as e:
+        message = f"Token is invalid --> {e}"
+        print({"message": message})
+        if 'expired' in message:
+            return True, renew_token(token, user)
+        return False, message 
+
+def renew_token(token, user):
+    account = ''
+    for u in users:
+        if user == u.username:
+            account = u
+
+    payload = {
+        "username": account.username,
+        "role" : account.role,
+        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+    }
+
+    new_token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    return new_token
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import inspect
+import datetime
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from flask import make_response
@@ -100,11 +101,22 @@ def login():
     result = login_user(req["username"], req["password"])
 
     if result != False :
+        token = createJWTToken(result)
         return jsonify({
             "user": result.username,
-            "token": "isnog362392"
+            "token": token
         })
     return app.make_response(("Login failed", 666))
+
+@app.route('/api/validate', methods=['POST'])
+def validate_token():
+    req = request.get_json()
+    bool, result = validate_token(req["token"], req["user"])
+    if bool == True:
+        return jsonify({
+            "token": result
+        })
+    return app.make_response((result, 666))
     
 
 def startflask():
