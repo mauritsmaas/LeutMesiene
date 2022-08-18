@@ -20,14 +20,18 @@ export default new Vuex.Store({
   },
   actions: {},
   getters: {
+    user: state => state.user,
+    token: state => state.token
+  },
+  computed: {
     isLoggedIn(state) {
-        return !!state.token
+      return !!state.token
     },
     getUser() {
-        return this.state.user
+      return this.$store.getters.user
     },
     getToken() {
-        return this.state.token
+      return this.$store.getters.token
     },
   }
 });

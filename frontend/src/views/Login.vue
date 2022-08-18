@@ -46,23 +46,21 @@ export default {
       data: null,
       username: "",
       password: "",
-      user: null,
+      login_user: null,
     };
   },
   methods: {
     ...mapMutations(["setUser", "setToken"]),
-    ...mapGetters(["getUser"]),
     login() {
-      this.user = {username: this.username,
+      this.login_user = {username: this.username,
                   password: this.password}
-      console.log(this.user)
       const path = 'http://127.0.0.1:5001/api/login'
-      axios.post(path, this.user
+      axios.post(path, this.login_user
       ).then(response => {
-        console.log(response.data["user"], response.data["token"] );
-        this.setUser(response.data["user"])
-        this.setToken(response.data["token"])
-        console.log(this.getUser)
+         //Set user and token in vuex store, https://vuex.vuejs.org/guide/getters.html
+         this.setUser(response.data["user"])
+         this.setToken(response.data["token"])
+         console.log(this.$store.getters.user, this.$store.getters.token)
       }).catch(err =>{
         console.log(err);
       });
