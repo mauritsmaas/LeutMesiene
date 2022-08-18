@@ -1,6 +1,8 @@
 <template>
+  
   <v-card class="mx-auto" color="grey lighten-4" max-width="600">
     <v-card-title>
+      <h1 :style="{color: ' #f67e7e'}"> User: {{ this.user }} </h1>
       <v-icon :color="checking ? 'red lighten-2' : 'indigo'" class="mr-5" size="64" @click="takePulse">
         mdi-heart-pulse
       </v-icon>
@@ -8,7 +10,7 @@
         <div class="caption grey--text text-uppercase">
           Heart rate
         </div>
-        <div>
+        <div :style="{color: ' #f67e7e'}">
           <span class="display-2 font-weight-black" v-text="avg || '—'"></span>
           <strong v-if="avg">BPM</strong>
         </div>
@@ -26,13 +28,16 @@
     </v-sheet>
   </v-card>
 </template>
+
+
 <script>
   const exhale = ms =>
     new Promise(resolve => setTimeout(resolve, ms))
   export default {
     data: () => ({
       checking: false,
-      heartbeats: []
+      heartbeats: [],
+      user: null
     }),
     computed: {
       avg () {
@@ -43,7 +48,8 @@
       }
     },
     created () {
-      this.takePulse(false)
+      this.takePulse(false),
+      this.user = this.$store.getters.user
     },
     methods: {
       heartbeat () {
