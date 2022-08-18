@@ -38,7 +38,7 @@
 <script>
 import axios from 'axios';
 import { mapMutations } from "vuex";
-import { mapGetters } from "vuex";
+
 
 export default {
   data: function() {
@@ -61,6 +61,7 @@ export default {
          this.setUser(response.data["user"])
          this.setToken(response.data["token"])
          console.log(this.$store.getters.user, this.$store.getters.token)
+         this.$router.push("/");
       }).catch(err =>{
         console.log(err);
       });

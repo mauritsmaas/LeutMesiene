@@ -247,6 +247,7 @@ export default {
   },
   mounted() {
     this.getItem(this.$route.params.id);
+    console.log(this.$store.getters.token)
   }
 };
 </script>
