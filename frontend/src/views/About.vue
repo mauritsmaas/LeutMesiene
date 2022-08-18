@@ -26,18 +26,22 @@
         stroke-linecap="round"
       ></v-sparkline>
     </v-sheet>
+    <p :style="{color: ' #000000'}">TEST purposes: {{ this.token }} </p>
   </v-card>
 </template>
 
 
 <script>
+import store from '../store'
+
   const exhale = ms =>
     new Promise(resolve => setTimeout(resolve, ms))
   export default {
     data: () => ({
       checking: false,
       heartbeats: [],
-      user: null
+      user: null,
+      token: null
     }),
     computed: {
       avg () {
@@ -49,7 +53,8 @@
     },
     created () {
       this.takePulse(false),
-      this.user = this.$store.getters.user
+      this.user = this.$store.getters.user,
+      this.token = this.$store.getters.token
     },
     methods: {
       heartbeat () {

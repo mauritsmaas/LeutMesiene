@@ -61,7 +61,7 @@ export default {
          this.setUser(response.data["user"])
          this.setToken(response.data["token"])
          console.log(this.$store.getters.user, this.$store.getters.token)
-         this.$router.push("/");
+         this.$router.push("/items");
       }).catch(err =>{
         console.log(err);
       });
