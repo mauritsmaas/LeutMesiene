@@ -8,6 +8,8 @@ import Items from '../views/items'
 import Item from '../views/Item'
 import AddItem from '../views/AddItem'
 import Login from '../views/Login'
+import store from '../store'
+import router from '../router'
 
 // const routerOptions = [
 //   { path: '/', component: 'Home' },
@@ -27,6 +29,7 @@ Vue.use(Router)
  /* eslint-disable */ 
 
 export default new Router({
+  
   routes: [
     {
      path: '/',
@@ -46,7 +49,10 @@ export default new Router({
     {
       path: '/items',
      name: 'items',
-     component: Items
+     component: Items,
+      meta: {
+        requiresAuth: true
+      } 
     },
     {
       path: '/login',
@@ -56,12 +62,18 @@ export default new Router({
     {
       path: "/item/:id",
       name: "item-details",
-      component: Item
+      component: Item,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: "/add-item",
       name: "add-item",
-      component: AddItem
+      component: AddItem,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '*',
@@ -70,3 +82,15 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to,from,next) => {
+  if(to.matched.some(route => route.meta.requiresAuth)){
+      if(store.getters.token){
+          next();
+      }else{
+          next('/');
+      }
+  }else{
+      next();
+  }
+});
