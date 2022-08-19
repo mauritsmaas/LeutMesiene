@@ -4,6 +4,7 @@ import sys
 import json
 import inspect
 import datetime
+import re
 from traceback import print_tb
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
@@ -55,6 +56,14 @@ def item_update(id):
     phase = req['phase']
 
     print(item_id)
+
+    # Validate the token in header
+    # TODO: handle different results if JWT is not correct
+    # TODO: update functionality only execute based on the input in dictionary
+    # TODO: renew JWT also in the dictionary
+    result = validate_token(request)
+    print(check_jwt_pattern(result))
+
 
     update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
     
@@ -108,28 +117,29 @@ def login():
         couple_user_token(result.username, token)
         return jsonify({
             "user": result.username,
-            "token": token #"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
         })
     return app.make_response(("Login failed", 666))
 
-@app.route('/api/validate', methods=['POST'])
-def validate_token():
-    req = request.get_json()
-    print("HOI",req)
+# @app.route('/api/validate', methods=['POST'])
+def validate_token(request):
     token = get_token(request.headers["Authorization"])
     bool, result = validate_jwttoken(token)
     print("VALIDATIE BACKEND", bool, result, token)
     if bool == True:
-        return jsonify({
-            "token": result
-        })
+        return result
     if 'expired' in result:
-        newtoken =  renew_token(req["user"])
-        return jsonify({
-            "token": newtoken
-        })
-    return app.make_response((result, 666))
+        newtoken =  renew_token(request["user"])
+        return newtoken
+    return result
     
+def check_jwt_pattern(input):
+    pattern = re.compile("^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$")
+    if pattern.match(input):
+        print("IT IS JWT")
+        return True
+    return False
+
 
 def startflask():
     app.run(port=5001)
