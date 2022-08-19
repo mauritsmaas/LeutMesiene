@@ -201,6 +201,7 @@
 
 <script>
 import axios from 'axios';
+import { mapMutations } from "vuex";
 
 export default {
   name: "tutorial",
@@ -208,9 +209,12 @@ export default {
     return {
       data: null,
       currentItem: null,
+      user: null,
+      token: null
     };
   },
   methods: {
+    ...mapMutations(["setToken"]),
     getItem(id) {
       const path = 'http://127.0.0.1:5001/api/item/'+ id;
       axios.get(path, )
@@ -224,17 +228,18 @@ export default {
         });
     },
     updateItem() {
-      console.log(this.currentItem)
-      const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/update'
-      axios.post(path, this.currentItem
-      ).then(response => {
-        console.log(response);
-      }).catch(err =>{
-        console.log(err);
-      });
+      const pathUpdate = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/update'
+      const headers = {
+        'Authorization': 'Bearer '+ this.$store.getters.token
+      }
+      axios.post(pathUpdate, this.currentItem, { headers: headers },
+       ).then(response => {
+          console.log(response);
+        }).catch(err =>{
+          console.log(err);
+        });    
     },
     deleteItem() {
-      console.log(this.currentItem)
       const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/delete'
       axios.delete(path, this.currentItem
       ).then(response => {
@@ -244,10 +249,39 @@ export default {
         console.log(err);
       });
     },
+    // sendValidation(){
+    //   const pathValidate = 'http://127.0.0.1:5001/api/validate'
+    //   const headers = {
+    //     'Authorization': 'Bearer '+ this.$store.getters.token
+    //   }
+    //   axios.post(pathValidate, this.user, { headers: headers }
+    //   ).then(response => {
+    //     this.res = response
+    //     while (this.res === null){
+    //       console.log(this.res)
+    //     }
+    //   }).catch(err =>{
+    //     console.log(err);
+    //   });
+    // },
+    // validate(){
+    //   if (this.res.status == 200){
+    //       //this.setValidation(true)
+    //       if (this.res.data["token"]){
+    //         this.setToken(response.data["token"])
+    //         console.log("VALIDATE NEW", this.$store.getters.token)
+    //         return true
+    //       }
+    //       return true
+    //   }else{
+    //     return false
+    //   }
+    // }
   },
   mounted() {
     this.getItem(this.$route.params.id);
-    console.log(this.$store.getters.token)
+    this.user = this.$store.getters.user
+    this.token = this.$store.getters.token
   }
 };
 </script>

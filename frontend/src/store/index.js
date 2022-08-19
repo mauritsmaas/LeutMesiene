@@ -12,16 +12,17 @@ export default new Vuex.Store({
 
   mutations: {
     setUser(state, user) {
-      state.user = user;
+      state.user = {"user" : user};
     },
     setToken(state, token) {
       state.token = token;
-    },
+    }
   },
   actions: {},
   getters: {
     user: state => state.user,
-    token: state => state.token
+    token: state => state.token,
+    is_valid: state => state.is_valid
   },
   computed: {
     isLoggedIn(state) {
@@ -32,7 +33,7 @@ export default new Vuex.Store({
     },
     getToken() {
       return this.$store.getters.token
-    },
+    }
   }
 });
 

@@ -66,6 +66,10 @@ export default {
         console.log(err);
       });
     }
+  },
+  beforeMount() {
+      this.setUser(null)
+      this.setToken(null)
   }
 };
 </script>

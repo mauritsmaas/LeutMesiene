@@ -4,6 +4,7 @@ import sys
 import json
 import inspect
 import datetime
+from traceback import print_tb
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from flask import make_response
@@ -41,6 +42,8 @@ def all_items():
 @app.route('/api/item/<id>/update', methods=['POST'])
 def item_update(id):
     req = request.get_json()
+    print(req)
+
     item_id = req['id']
     name = req['name']
     type = req['type']
@@ -56,7 +59,7 @@ def item_update(id):
     update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
     
     item_new = getitembyid(item_id)
-    print(item_new)
+
     return jsonify({
         'item': item_new.to_dict()
     })
@@ -102,19 +105,28 @@ def login():
 
     if result != False :
         token = createJWTToken(result)
+        couple_user_token(result.username, token)
         return jsonify({
             "user": result.username,
-            "token": token
+            "token": token #"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
         })
     return app.make_response(("Login failed", 666))
 
 @app.route('/api/validate', methods=['POST'])
 def validate_token():
     req = request.get_json()
-    bool, result = validate_token(req["token"], req["user"])
+    print("HOI",req)
+    token = get_token(request.headers["Authorization"])
+    bool, result = validate_jwttoken(token)
+    print("VALIDATIE BACKEND", bool, result, token)
     if bool == True:
         return jsonify({
             "token": result
+        })
+    if 'expired' in result:
+        newtoken =  renew_token(req["user"])
+        return jsonify({
+            "token": newtoken
         })
     return app.make_response((result, 666))
     

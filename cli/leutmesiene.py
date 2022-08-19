@@ -39,7 +39,6 @@ class User(object):
     def __iter__(self):
         return self
 
-users = [User("test", "test",0), User("aaa", "aaa",1)]
 
 class Item(object):
     id = 0
@@ -570,10 +569,14 @@ def deleteItem(id):
     except Exception as e:
         print(e)
 
+## User handling
+
+users = [User("test", "test",0), User("aaa", "aaa",1)]
+
+user_token_dict = {}
+
 def login_user(username, password):
     for user in users:
-        # print(user.to_dict())
-        # print(user.username, user.password, username, password)
         if user.username == username and user.password == password:
             return user
     return False
@@ -591,7 +594,7 @@ def createJWTToken(user):
     encoded_data = jwt.encode(payload=payload, key=SECRET_KEY, algorithm="HS256")
     return encoded_data
 
-def validate_token(token, user):
+def validate_jwttoken(token):
     try:
         decode_data = jwt.decode(jwt=token, \
                             key=SECRET_KEY, algorithms="HS256")
@@ -600,11 +603,9 @@ def validate_token(token, user):
     except Exception as e:
         message = f"Token is invalid --> {e}"
         print({"message": message})
-        if 'expired' in message:
-            return True, renew_token(token, user)
         return False, message 
 
-def renew_token(token, user):
+def renew_token(user):
     account = ''
     for u in users:
         if user == u.username:
@@ -618,6 +619,19 @@ def renew_token(token, user):
 
     new_token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return new_token
+
+def get_token(header):
+    PREFIX = 'Bearer'
+    bearer, _, token = header.partition(' ')
+    if bearer != PREFIX:
+        raise ValueError('Invalid token')
+
+    return token
+
+def couple_user_token(username, token):
+    user_token_dict.update({username : token}) 
+    print(user_token_dict)
+
 
 if __name__ == "__main__":
     main()
