@@ -236,7 +236,10 @@ export default {
        ).then(response => {
           console.log(response);
         }).catch(err =>{
-          console.log(err);
+          if(err.response.status === 666);
+            console.log(err.response.data)
+            this.$alert(err.response.data, "Verification failed")
+            this.$router.push('/login')
         });    
     },
     deleteItem() {

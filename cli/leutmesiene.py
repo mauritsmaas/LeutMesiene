@@ -605,10 +605,16 @@ def validate_jwttoken(token):
         print({"message": message})
         return False, message 
 
-def renew_token(user):
+def renew_token(token):
+    for username, value in user_token_dict.items():
+        if token == value:
+            return username
+ 
+    print("username by key", username)
+    
     account = ''
     for u in users:
-        if user == u.username:
+        if username == u.username:
             account = u
 
     payload = {
@@ -616,8 +622,8 @@ def renew_token(user):
         "role" : account.role,
         "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
     }
-
     new_token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    couple_user_token(account.username, new_token)
     return new_token
 
 def get_token(header):

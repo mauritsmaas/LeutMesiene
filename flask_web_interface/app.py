@@ -62,16 +62,25 @@ def item_update(id):
     # TODO: update functionality only execute based on the input in dictionary
     # TODO: renew JWT also in the dictionary
     result = validate_token(request)
-    print(check_jwt_pattern(result))
-
-
-    update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
+    ## If valid token do update, else return not updated item with error message (666)
+    if check_jwt_pattern(result):
+        update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
     
-    item_new = getitembyid(item_id)
+        item_new = getitembyid(item_id)
 
-    return jsonify({
-        'item': item_new.to_dict()
-    })
+        if (result == get_token(request.headers["Authorization"])):
+            return jsonify({
+            'item': item_new.to_dict()
+            })
+        else:
+            return jsonify({
+                'item': item_new.to_dict(),
+                'token': result
+            })
+    else:
+        return app.make_response((result, 666))
+
+    
     
 
 @app.route('/api/item/add', methods=['POST'])
@@ -117,28 +126,38 @@ def login():
         couple_user_token(result.username, token)
         return jsonify({
             "user": result.username,
-            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
+            #"token": token 
+            #"token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCI6MTY2MTE1MjY0NH0.Tw4UmWlz-cJ6ALQAWy9ILExysaESA7LsdpaidsiN-xA"
         })
     return app.make_response(("Login failed", 666))
 
 # @app.route('/api/validate', methods=['POST'])
 def validate_token(request):
     token = get_token(request.headers["Authorization"])
-    bool, result = validate_jwttoken(token)
-    print("VALIDATIE BACKEND", bool, result, token)
-    if bool == True:
+    if check_jwt_pattern(token):
+        bool, result = validate_jwttoken(token)
+        print("VALIDATIE BACKEND", bool, result, token)
+        if bool == True:
+            return result
+        if 'expired' in result:
+            newtoken =  renew_token(token)
+            return newtoken
         return result
-    if 'expired' in result:
-        newtoken =  renew_token(request["user"])
-        return newtoken
-    return result
+    return False
     
 def check_jwt_pattern(input):
-    pattern = re.compile("^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$")
-    if pattern.match(input):
-        print("IT IS JWT")
-        return True
-    return False
+    try:
+        pattern = re.compile("^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$")
+        if pattern.match(input):
+            print("IT IS JWT")
+            return True
+        return False
+    except Exception as e:
+        message = f"Token is invalid --> {e}"
+        print({"message": message})
+        return message 
+    
 
 
 def startflask():
