@@ -57,10 +57,7 @@ def item_update(id):
 
     print(item_id)
 
-    # Validate the token in header
-    # TODO: handle different results if JWT is not correct
-    # TODO: update functionality only execute based on the input in dictionary
-    # TODO: renew JWT also in the dictionary
+    # Validates the token in auth header
     result = validate_token(request)
     ## If valid token do update, else return not updated item with error message (666)
     if check_jwt_pattern(result):
@@ -80,8 +77,6 @@ def item_update(id):
     else:
         return app.make_response((result, 666))
 
-    
-    
 
 @app.route('/api/item/add', methods=['POST'])
 def item_add():
@@ -111,8 +106,21 @@ def item_details(id):
 
 @app.route('/api/item/<id>/delete', methods=['DELETE'])
 def item_delete(id):
-    deleteItem(id)
-    return app.make_response(("Item with ID "+id)+" is deleted")
+    result = validate_token(request)
+    ## If valid token do delete, else return not delete item with error message (666)
+    # TODO: delete functionality only execute based on the input in dictionary
+    if check_jwt_pattern(result):
+        deleteItem(id)
+        if (result == get_token(request.headers["Authorization"])):
+            return jsonify({
+                'message': "Item with ID "+id+" is deleted"
+            })
+        else:
+            return jsonify({
+                'message': "Item with ID "+id+" is deleted",
+                'token': result
+            })
+    return app.make_response((result, 666))
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -127,12 +135,12 @@ def login():
         return jsonify({
             "user": result.username,
             #"token": token 
-            #"token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg"
-            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCI6MTY2MTE1MjY0NH0.Tw4UmWlz-cJ6ALQAWy9ILExysaESA7LsdpaidsiN-xA"
+            #"token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg" #INVALID SIGNATURE
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCI6MTY2MTE1MjY0NH0.Tw4UmWlz-cJ6ALQAWy9ILExysaESA7LsdpaidsiN-xA" #EXPIRED TOKEN
         })
     return app.make_response(("Login failed", 666))
 
-# @app.route('/api/validate', methods=['POST'])
+## Functions that are not an API but essential for validation of authorization
 def validate_token(request):
     token = get_token(request.headers["Authorization"])
     if check_jwt_pattern(token):

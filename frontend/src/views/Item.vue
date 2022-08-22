@@ -244,10 +244,16 @@ export default {
         });    
     },
     deleteItem() {
+      const headers = {
+        'Authorization': 'Bearer '+ this.$store.getters.token
+      }
       const path = 'http://127.0.0.1:5001/api/item/'+ this.currentItem.id +'/delete'
-      axios.delete(path, this.currentItem
+      axios.delete(path, {headers: headers} , this.currentItem
       ).then(response => {
-        this.$alert(response.data, "Item deleted")
+        console.log(response)
+        if (response.data['token'])
+            this.setToken(response.data['token'])
+        this.$alert(response.data['message'], "Item deleted")
         this.$router.push("/items")
       }).catch(err =>{
         console.log(err);
