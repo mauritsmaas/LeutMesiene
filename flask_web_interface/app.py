@@ -82,18 +82,29 @@ def item_update(id):
 def item_add():
     req = request.get_json()
     print(req)
-    if(verification_values_new_item(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["attackos"], req["phase"])):
-        print("check")
-        add_item_db(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["phase"], req["attackos"])
-        
-        item_new = getitembyid(getitemid_byname(req["name"]))
-        print(item_new)
-        return jsonify({
-            'item': item_new.to_dict()
-        })
-    else:
-        print("failed")
-        return app.make_response(("Syntax not right", 666))   
+
+    # Validates the token in auth header
+    result = validate_token(request)
+    ## If valid token do update, else return not updated item with error message (666)
+    if check_jwt_pattern(result):
+        if(verification_values_new_item(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["attackos"], req["phase"])):
+            print("check")
+            add_item_db(req["name"], req["type"],req["description"], req["usage"], req["source"], req["cve"], req["phase"], req["attackos"])
+            
+            item_new = getitembyid(getitemid_byname(req["name"]))
+            print(item_new)
+            if (result == get_token(request.headers["Authorization"])):
+                return jsonify({
+                'item': item_new.to_dict()
+                })
+            else:
+                return jsonify({
+                    'item': item_new.to_dict(),
+                    'token': result
+                })
+        else:
+            return app.make_response(("Syntax not right", 666))   
+    return app.make_response((result, 666))
     
 
 @app.route('/api/item/<id>', methods=['GET'])

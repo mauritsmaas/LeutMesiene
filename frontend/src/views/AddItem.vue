@@ -190,6 +190,7 @@
 
 <script>
 import axios from 'axios';
+import { mapMutations } from "vuex";
 
 export default {
   name: "tutorial",
@@ -210,6 +211,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setToken"]),
     AddItem() {
       this.currentItem = {name: this.name, 
                           type: this.type,
@@ -220,14 +222,18 @@ export default {
                           attackos: this.attackos,
                           phase: this.phase}
       console.log(this.currentItem)
-      
+      const headers = {
+        'Authorization': 'Bearer '+ this.$store.getters.token
+      }
       const path = 'http://127.0.0.1:5001/api/item/add'
-      axios.post(path, this.currentItem
+      axios.post(path, this.currentItem, {headers: headers}
       ).then(response => {
-        console.log(response);
+        if (response.data['token'])
+            this.setToken(response.data['token'])
+        console.log(this.$store.getters.token)
         this.$router.push("/item/"+ response.data.item.id)
       }).catch(err =>{
-        console.log("failed")
+        console.log(err)
         this.$alert("You made a mistake with filling everything in", "Syntax error")
       });
     },
