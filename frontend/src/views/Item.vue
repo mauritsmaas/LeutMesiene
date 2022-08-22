@@ -234,7 +234,8 @@ export default {
       }
       axios.post(pathUpdate, this.currentItem, { headers: headers },
        ).then(response => {
-          console.log(response);
+          if (response.data['token'])
+            this.setToken(response.data['token'])
         }).catch(err =>{
           if(err.response.status === 666);
             console.log(err.response.data)
