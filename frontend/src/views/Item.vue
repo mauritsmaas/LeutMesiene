@@ -185,7 +185,7 @@
             Update
           </v-btn>
 
-          <v-btn color="error"  @click="deleteItem" >
+          <v-btn v-if="this.role < 1" color="error"  @click="deleteItem" >
             Delete
           </v-btn>
         </div>
@@ -202,6 +202,8 @@
 <script>
 import axios from 'axios';
 import { mapMutations } from "vuex";
+import jwt_decode from "jwt-decode";
+import store from '../store';
 
 export default {
   name: "tutorial",
@@ -209,8 +211,7 @@ export default {
     return {
       data: null,
       currentItem: null,
-      user: null,
-      token: null
+      role: null
     };
   },
   methods: {
@@ -221,7 +222,6 @@ export default {
         .then((res) => {
           this.data = res.data;
           this.currentItem = this.data.item
-          //console.log(this.currentItem.attackos)
         })
         .catch((error) => {
           console.error(error);
@@ -292,8 +292,7 @@ export default {
   },
   mounted() {
     this.getItem(this.$route.params.id);
-    this.user = this.$store.getters.user
-    this.token = this.$store.getters.token
+    this.role = jwt_decode(this.$store.getters.token)['role']
   }
 };
 </script>

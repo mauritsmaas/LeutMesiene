@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import vuetify from '../plugins/vuetify'
-import VueSimpleAlert from "vue-simple-alert";
+import VueSimpleAlert from "vue-simple-alert"
 
 
 
