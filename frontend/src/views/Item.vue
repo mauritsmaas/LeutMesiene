@@ -256,7 +256,9 @@ export default {
         this.$alert(response.data['message'], "Item deleted")
         this.$router.push("/items")
       }).catch(err =>{
-        console.log(err);
+          if(err.response.data.includes("invalid"))
+            this.$alert(err.response.data, "Authentication failure")
+            this.$router.push('/login')
       });
     },
     // sendValidation(){

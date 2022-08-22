@@ -233,8 +233,11 @@ export default {
         console.log(this.$store.getters.token)
         this.$router.push("/item/"+ response.data.item.id)
       }).catch(err =>{
-        console.log(err)
-        this.$alert("You made a mistake with filling everything in", "Syntax error")
+        console.log(err.response)
+        if(err.response.data.includes("invalid"))
+            this.$alert(err.response.data, "Authentication failure")
+            
+        this.$router.push('/login')
       });
     },
     

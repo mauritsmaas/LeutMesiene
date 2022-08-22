@@ -145,9 +145,9 @@ def login():
         couple_user_token(result.username, token)
         return jsonify({
             "user": result.username,
-            #"token": token 
+            "token": token 
             #"token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCBLAI6MTY2MDg5Njk1NH0.H8zPwn_Msgq27xoE5_PeP_oJMYXjwPuOh-h6ibXXXLg" #INVALID SIGNATURE
-            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCI6MTY2MTE1MjY0NH0.Tw4UmWlz-cJ6ALQAWy9ILExysaESA7LsdpaidsiN-xA" #EXPIRED TOKEN
+            #"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFhYSIsInJvbGUiOjEsImV4cCI6MTY2MTE1MjY0NH0.Tw4UmWlz-cJ6ALQAWy9ILExysaESA7LsdpaidsiN-xA" #EXPIRED TOKEN
         })
     return app.make_response(("Login failed", 666))
 
