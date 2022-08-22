@@ -62,7 +62,7 @@ def item_update(id):
     ## If valid token do update, else return not updated item with error message (666)
     if check_jwt_pattern(result):
         update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
-    
+        
         item_new = getitembyid(item_id)
 
         if (result == get_token(request.headers["Authorization"])):
@@ -73,7 +73,7 @@ def item_update(id):
             return jsonify({
                 'item': item_new.to_dict(),
                 'token': result
-            })
+            }) 
     else:
         return app.make_response((result, 666))
 
@@ -121,16 +121,19 @@ def item_delete(id):
     ## If valid token do delete, else return not delete item with error message (666)
     # TODO: delete functionality only execute based on the input in dictionary
     if check_jwt_pattern(result):
-        deleteItem(id)
-        if (result == get_token(request.headers["Authorization"])):
-            return jsonify({
-                'message': "Item with ID "+id+" is deleted"
-            })
+        if (check_user_role(result) < 1):
+            deleteItem(id)
+            if (result == get_token(request.headers["Authorization"])):
+                return jsonify({
+                    'message': "Item with ID "+id+" is deleted"
+                })
+            else:
+                return jsonify({
+                    'message': "Item with ID "+id+" is deleted",
+                    'token': result
+                })
         else:
-            return jsonify({
-                'message': "Item with ID "+id+" is deleted",
-                'token': result
-            })
+            return app.make_response(("You are not allowed to do this action", 403))
     return app.make_response((result, 666))
 
 @app.route('/api/login', methods=['POST'])

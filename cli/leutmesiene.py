@@ -638,6 +638,9 @@ def couple_user_token(username, token):
     user_token_dict.update({username : token}) 
     print(user_token_dict)
 
+def check_user_role(token):
+    decode_data = jwt.decode(token, options={"verify_signature": False})
+    return decode_data['role']
 
 if __name__ == "__main__":
     main()

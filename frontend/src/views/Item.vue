@@ -237,10 +237,13 @@ export default {
           if (response.data['token'])
             this.setToken(response.data['token'])
         }).catch(err =>{
-          if(err.response.status === 666);
+          if(err.response.status === 666){
             console.log(err.response.data)
             this.$alert(err.response.data, "Verification failed")
             this.$router.push('/login')
+          }else if(err.response.status === 403){
+            this.$alert(err.response.data, "Verification failed")
+          }
         });    
     },
     deleteItem() {
