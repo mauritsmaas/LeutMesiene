@@ -589,7 +589,7 @@ def createJWTToken(user):
     payload = {
         "username": user.username,
         "role" : user.role,
-        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
     }
     encoded_data = jwt.encode(payload=payload, key=SECRET_KEY, algorithm="HS256")
     return encoded_data
@@ -605,12 +605,9 @@ def validate_jwttoken(token):
         print({"message": message})
         return False, message 
 
-def renew_token(token):
-    for username, value in user_token_dict.items():
-        if token == value:
-            return username
- 
-    print("username by key", username)
+def renew_token(token):  
+    username = get_keys_from_value(token)[0]
+    print("DIT IS DE USER", username)
     
     account = ''
     for u in users:
@@ -625,6 +622,9 @@ def renew_token(token):
     new_token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     couple_user_token(account.username, new_token)
     return new_token
+
+def get_keys_from_value(val):
+    return [k for k, v in user_token_dict.items() if v == val]
 
 def get_token(header):
     PREFIX = 'Bearer'

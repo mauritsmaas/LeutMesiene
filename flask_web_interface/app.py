@@ -7,7 +7,7 @@ import datetime
 import re
 from traceback import print_tb
 from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask import make_response
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -21,7 +21,7 @@ app = Flask(__name__,
             template_folder = "../frontend/dist")
 
 # Handles the Cross Origin Resource Sharing, https://flask-cors.readthedocs.io/en/latest/
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5001", "http://127.0.0.1:5001", "http://localhost:8081", "http://127.0.0.1:8081"]}})
 
 #Catch the different paths and use the vue-router
 @app.route('/', defaults={'path': ''})
@@ -34,6 +34,7 @@ def index():
     return render_template("index.html")
 
 @app.route('/api/items', methods=['GET'])
+@cross_origin()
 def all_items():
     items = getdbinfo()
     return jsonify({
@@ -41,6 +42,7 @@ def all_items():
     })
 
 @app.route('/api/item/<id>/update', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def item_update(id):
     req = request.get_json()
     print(req)
@@ -79,6 +81,7 @@ def item_update(id):
 
 
 @app.route('/api/item/add', methods=['POST'])
+@cross_origin()
 def item_add():
     req = request.get_json()
     print(req)
@@ -108,6 +111,7 @@ def item_add():
     
 
 @app.route('/api/item/<id>', methods=['GET'])
+@cross_origin()
 def item_details(id):
     item = getitembyid(id)
     print(item.to_dict())
@@ -116,10 +120,10 @@ def item_details(id):
     })
 
 @app.route('/api/item/<id>/delete', methods=['DELETE'])
+@cross_origin()
 def item_delete(id):
     result = validate_token(request)
     ## If valid token do delete, else return not delete item with error message (666)
-    # TODO: delete functionality only execute based on the input in dictionary
     if check_jwt_pattern(result):
         if (check_user_role(result) < 1):
             deleteItem(id)
@@ -137,6 +141,7 @@ def item_delete(id):
     return app.make_response((result, 666))
 
 @app.route('/api/login', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def login():
     req = request.get_json()
 
@@ -163,8 +168,12 @@ def validate_token(request):
         if bool == True:
             return result
         if 'expired' in result:
-            newtoken =  renew_token(token)
-            return newtoken
+            try:
+                newtoken =  renew_token(token)
+                return newtoken
+            except Exception as e:
+                message = f"Token is invalid --> session cannot be validated"
+                return message
         return result
     return False
     
