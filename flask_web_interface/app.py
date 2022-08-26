@@ -106,7 +106,7 @@ def item_add():
                     'token': result
                 })
         else:
-            return app.make_response(("Syntax not right", 666))   
+            return app.make_response(("Syntax error", 666))   
     return app.make_response((result, 666))
     
 
@@ -141,7 +141,6 @@ def item_delete(id):
     return app.make_response((result, 666))
 
 @app.route('/api/login', methods=['POST'])
-@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def login():
     req = request.get_json()
 
@@ -181,7 +180,6 @@ def check_jwt_pattern(input):
     try:
         pattern = re.compile("^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$")
         if pattern.match(input):
-            print("IT IS JWT")
             return True
         return False
     except Exception as e:

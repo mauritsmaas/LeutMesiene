@@ -338,20 +338,31 @@ def verification_all_values(id, name, type, description, usage, source, cve, att
                                     print("Done")
                                     print(name, type,description,usage,source,cve,phase, attackos)
                                     #everything checked
-                                    return True, 
+                                    print("NO ERRORS in VALIDATION")
+                                    return True
                                 else:
+                                    print("ERROR in ATTACK OS", attackos)
                                     return False
                             else:
-                                return False
+                                print("ERROR in PHASE", phase)
+                                return False 
+                        else:
+                            print("ERROR in SOURCE", source)
+                            return False   
                     else:
+                        print("ERROR in USAGE", usage)
                         return False
                 else:
+                    print("ERROR in DESCRIPTION", description)
                     return False    
             else:
+                print("ERROR in TYPE", type)
                 return False
         else:
+            print("ERROR in NAME", name)
             return False
     else:
+        print("ERROR in ID", id)
         return False
             
 
@@ -376,19 +387,30 @@ def verification_values_new_item(name, type, description, usage, source, cve, at
                             if match_os:
                                 print("Done")
                                 print(name, type,description,usage,source,cve,phase, attackos)
+                                print("NO ERRORS in VALIDATION")
                                 return True
                             else:
+                                print("ERROR in ATTACK OS", attackos)
                                 return False
                         else:
-                            return False
+                            print("ERROR in PHASE", phase)
+                            return False 
+                    else:
+                        print("ERROR in SOURCE", source)
+                        return False   
                 else:
+                    print("ERROR in USAGE", usage)
                     return False
             else:
+                print("ERROR in DESCRIPTION", description)
                 return False    
         else:
+            print("ERROR in TYPE", type)
             return False
     else:
-        return False, 
+        print("ERROR in NAME", name)
+        return False
+                
     
 
 def print_allitems():
