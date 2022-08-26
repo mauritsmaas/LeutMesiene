@@ -234,11 +234,13 @@ export default {
         this.$router.push("/item/"+ response.data.item.id)
       }).catch(err =>{
         console.log(err.response)
-        if(err.response.data.includes("invalid"))
+        if(err.response.data.includes("invalid")){
             this.$alert(err.response.data, "Authentication failure")
             this.$router.push('/login')
-        //TODO: Handle weird input data
-        this.$alert(err.response.data, "Syntax error")
+        }else{
+          this.$alert(err.response.data, "Syntax error")
+        }
+        
       });
     },
     

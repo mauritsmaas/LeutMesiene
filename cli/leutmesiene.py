@@ -376,7 +376,6 @@ def verification_values_new_item(name, type, description, usage, source, cve, at
                             if match_os:
                                 print("Done")
                                 print(name, type,description,usage,source,cve,phase, attackos)
-                                #everything checked
                                 return True
                             else:
                                 return False
@@ -389,7 +388,7 @@ def verification_values_new_item(name, type, description, usage, source, cve, at
         else:
             return False
     else:
-        return False
+        return False, 
     
 
 def print_allitems():
