@@ -238,11 +238,10 @@ export default {
             this.setToken(response.data['token'])
         }).catch(err =>{
           if(err.response.status === 666){
-            console.log(err.response.data)
-            this.$alert(err.response.data, "Verification failed")
-            this.$router.push('/login')
+            this.$alert(err.response.data, "Syntax error")
           }else if(err.response.status === 403){
             this.$alert(err.response.data, "Verification failed")
+            this.$router.push('/login')
           }
         });    
     },

@@ -59,25 +59,28 @@ def item_update(id):
 
     print(item_id)
 
-    # Validates the token in auth header
-    result = validate_token(request)
-    ## If valid token do update, else return not updated item with error message (666)
-    if check_jwt_pattern(result):
-        update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
-        
-        item_new = getitembyid(item_id)
+    if (verification_all_values(item_id, name, type, description, usage, source, cve, attackos, phase)):
+        # Validates the token in auth header
+        result = validate_token(request)
+        ## If valid token do update, else return not updated item with error message (666)
+        if check_jwt_pattern(result):
+            update_item(item_id, name, type, description, usage, source, cve, attackos, phase)
+            
+            item_new = getitembyid(item_id)
 
-        if (result == get_token(request.headers["Authorization"])):
-            return jsonify({
-            'item': item_new.to_dict()
-            })
+            if (result == get_token(request.headers["Authorization"])):
+                return jsonify({
+                'item': item_new.to_dict()
+                })
+            else:
+                return jsonify({
+                    'item': item_new.to_dict(),
+                    'token': result
+                }) 
         else:
-            return jsonify({
-                'item': item_new.to_dict(),
-                'token': result
-            }) 
+            return app.make_response((result, 403))
     else:
-        return app.make_response((result, 666))
+        return app.make_response(("Syntax error", 666))
 
 
 @app.route('/api/item/add', methods=['POST'])
