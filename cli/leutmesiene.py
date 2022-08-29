@@ -216,7 +216,10 @@ def verify_id(id):
     return False
 
 def verify_input(text):
+    regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
     if re.findall("\w", text):
+        return True
+    elif(regex.search(text)):
         return True
     return False
 
