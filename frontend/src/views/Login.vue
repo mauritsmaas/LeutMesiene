@@ -64,6 +64,9 @@ export default {
          this.$router.push("/items");
       }).catch(err =>{
         console.log(err);
+        if(err.response.status === 666){
+            this.$alert("Username/password is incorrect", err.response.data)
+        }
       });
     }
   },
