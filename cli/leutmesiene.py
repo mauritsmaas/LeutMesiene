@@ -485,24 +485,25 @@ def getitembyid(id):
     try:
         # Make connection with db file
         conn = sqlite3.connect(sys.path[0] + '/cli/database.db')
-
-        # Query to get all the items in db
-        query = 'SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
+        cur = conn.cursor()
+        # Query to get item by ID in db
+        query = """ SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
                     INNER JOIN types t ON i.type_id = t.id \
                     INNER JOIN phases p ON i.phase_id = p.id \
-                    WHERE i.id = ? '
+                    WHERE i.id = ? """
         print('Succes until first execute')
-        res = conn.execute("SELECT i.id, i.name, t.name, i.description, i.usage, i.source, i.cve, p.phase FROM items i \
-                    INNER JOIN types t ON i.type_id = t.id \
-                    INNER JOIN phases p ON i.phase_id = p.id \
-                    WHERE i.id = '{}'".format(id))
+        res = cur.execute(query, (id,))
+        
         i_res = res.fetchall()
+        print("I_RES:",i_res)
         item = i_res[0]
 
-        attackos_res = conn.execute("SELECT a.os FROM attack_oses a \
+        query_attackos = """ SELECT a.os FROM attack_oses a \
                                         JOIN item_attackos ia \
                                         ON a.id = ia.attackos_id \
-                                        WHERE ia.item_id = '{}'".format(id)).fetchall()
+                                        WHERE ia.item_id = ? """
+
+        attackos_res = cur.execute(query_attackos, (id,)).fetchall()
         attackoses = []
         for aos in attackos_res:
             attackoses.extend(aos)
@@ -613,7 +614,7 @@ def createJWTToken(user):
     payload = {
         "username": user.username,
         "role" : user.role,
-        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+        "exp" : datetime.datetime.utcnow() + datetime.timedelta(seconds=3000)
     }
     encoded_data = jwt.encode(payload=payload, key=SECRET_KEY, algorithm="HS256")
     return encoded_data
